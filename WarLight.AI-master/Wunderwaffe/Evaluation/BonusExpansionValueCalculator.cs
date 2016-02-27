@@ -108,13 +108,13 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 // Categorize the expansion values. Possible values are 0 = rubbish and 1 = good
                 var toMuchNeutrals = false;
                 var neutralArmies = bonus.NeutralArmies.DefensePower;
-                if (neutralArmies > 14)
+                if (neutralArmies > 28)
                     toMuchNeutrals = true;
-                else if (neutralArmies >= 10 && bonus.Amount <= 3)
+                else if (neutralArmies >= 20 && bonus.Amount <= 3)
                     toMuchNeutrals = true;
-                else if (neutralArmies >= 8 && bonus.Amount <= 2)
+                else if (neutralArmies >= 16 && bonus.Amount <= 2)
                     toMuchNeutrals = true;
-                else if (neutralArmies >= 6 && bonus.Amount <= 1)
+                else if (neutralArmies >= 12 && bonus.Amount <= 1)
                     toMuchNeutrals = true;
 
                 if (bonus.IsOwnedByMyself() || bonus.Amount == 0 || bonus.ContainsOpponentPresence() || toMuchNeutrals)
