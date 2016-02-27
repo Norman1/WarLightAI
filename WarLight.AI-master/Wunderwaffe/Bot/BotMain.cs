@@ -18,7 +18,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         public BotMain()
         {
             this.HistoryTracker = new HistoryTracker(this);
-            this.MovesScheduler2 = new MovesScheduler2(this);
+            this.MovesScheduler2 = new MovesScheduler(this);
             this.MovesCalculator = new MovesCalculator(this);
             this.GameState = new GameStateEvaluator(this);
             this.DeleteBadMovesTask = new DeleteBadMovesTask(this);
@@ -71,7 +71,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         public TakeTerritoriesTaskCalculator TakeTerritoriesTaskCalculator;
         public PreventOpponentExpandBonusTask PreventOpponentExpandBonusTask;
         public HistoryTracker HistoryTracker;
-        public MovesScheduler2 MovesScheduler2;
+        public MovesScheduler MovesScheduler2;
         public MovesCalculator MovesCalculator;
         public GameSettings Settings;
         public List<CardInstance> Cards;

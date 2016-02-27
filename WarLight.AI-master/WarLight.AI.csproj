@@ -136,8 +136,6 @@
     <Compile Include="Wunderwaffe\Move\SameMovesJoiner.cs" />
     <Compile Include="Wunderwaffe\Strategy\MovesCalculator.cs" />
     <Compile Include="Wunderwaffe\Strategy\MovesScheduler.cs" />
-    <Compile Include="Wunderwaffe\Strategy\MovesScheduler2.cs" />
-    <Compile Include="Wunderwaffe\Strategy\RunawayStrategy.cs" />
     <Compile Include="Wunderwaffe\Strategy\TakeTerritoriesTaskCalculator.cs" />
     <Compile Include="Wunderwaffe\Strategy\TransferMovesChooser.cs" />
     <Compile Include="Wunderwaffe\Tasks\AttackTerritoriesTask.cs" />
