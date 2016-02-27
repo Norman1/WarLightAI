@@ -89,7 +89,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         {
             var remainingArmies = this.GetArmiesAfterDeployment(type);
             foreach (var atm in IncomingMoves)
-                remainingArmies = remainingArmies.Subtract(new Armies(SharedUtility.Ceiling(atm.Armies.NumArmies * BotState.Settings.OffensiveKillRate)));
+                remainingArmies = remainingArmies.Subtract(new Armies(SharedUtility.Round(atm.Armies.NumArmies * BotState.Settings.OffensiveKillRate)));
 
             if (!remainingArmies.Fogged && remainingArmies.NumArmies < 1)
                 remainingArmies = new Armies(1, specialUnits: remainingArmies.SpecialUnits);
