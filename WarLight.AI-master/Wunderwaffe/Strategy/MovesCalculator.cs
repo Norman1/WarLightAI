@@ -483,11 +483,9 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                     return;
                 var foundMoves = true;
                 var firstStep = true;
-                var debug = 0;
                 while (foundMoves)
                 {
                     BotState.BonusValueCalculator.CalculateBonusValues(BotState.WorkingMap, BotState.VisibleMap);
-                    debug++;
                     foundMoves = false;
                     if (firstStep == false)
                     {
@@ -496,8 +494,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                         if (opponentBorderPresent)
                             armiesForExpansion = 0;
                         if (bonusToExpand.GetOpponentNeighbors().Count > 0)
-                            return;
-                        if (debug == 1)
                             return;
                     }
                     Moves oneStepMoves = null;

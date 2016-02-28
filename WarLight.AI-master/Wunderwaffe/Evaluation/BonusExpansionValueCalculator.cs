@@ -131,7 +131,6 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             var neutrals = (double)bonus.NeutralArmies.DefensePower;
 
             neutrals += bonus.Territories.Count(o => o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution) * BotState.Settings.InitialNeutralsInDistribution;
-
             return income / neutrals;
         }
 
