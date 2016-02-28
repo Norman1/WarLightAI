@@ -89,7 +89,8 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
 
         public void AddExtraValueForFirstTurnBonus(BotBonus bonus)
         {
-     //       bonus.MyExpansionValueHeuristic.AddExtraValueForFirstTurnBonus(bonus);
+            bonus.ExpansionValue += bonus.ExpansionValue * 0.1;
+            //       bonus.MyExpansionValueHeuristic.AddExtraValueForFirstTurnBonus(bonus);
         }
 
         /// <summary>Classifies the Bonus according to the intel from the temporaryMap.
@@ -129,6 +130,12 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
         {
             var income = (double)bonus.Amount;
             var neutrals = (double)bonus.NeutralArmies.DefensePower;
+            // handle the case of a one territory bonus during picking stage
+            if (neutrals == 0)
+            {
+                neutrals = 1;
+            }
+
 
             neutrals += bonus.Territories.Count(o => o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution) * BotState.Settings.InitialNeutralsInDistribution;
             return income / neutrals;
@@ -141,55 +148,55 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             if (IsExpansionWorthless(bonus))
                 return expansionValue;
 
-             var points = IncomeNeutralsRatio(bonus) * 1000;
-           // var points = IncomeNeutralsRatio(bonus);
+            var points = IncomeNeutralsRatio(bonus) * 1000;
+            // var points = IncomeNeutralsRatio(bonus);
 
-             var neutralArmies = bonus.NeutralArmies.DefensePower;
+            var neutralArmies = bonus.NeutralArmies.DefensePower;
 
-             if (neutralArmies > 8)
-                 points -= neutralArmies * 4.5;
-             else if (neutralArmies > 6)
-                 points -= neutralArmies * 3.5;
-             else if (neutralArmies > 4)
-                 points -= neutralArmies * 2.5;
+            if (neutralArmies > 8)
+                points -= neutralArmies * 4.5;
+            else if (neutralArmies > 6)
+                points -= neutralArmies * 3.5;
+            else if (neutralArmies > 4)
+                points -= neutralArmies * 2.5;
 
-             points -= 0.5 * bonus.Territories.Count;
+            points -= 0.5 * bonus.Territories.Count;
 
-             var immediatelyCounteredTerritories = 0;
-             immediatelyCounteredTerritories = bonus.GetOwnedTerritoriesBorderingNeighborsOwnedByOpponentOrDistribution().Count;
-
-
-
-             points -= 7 * immediatelyCounteredTerritories;
-
-             var allCounteredTerritories = GetCounteredTerritories(bonus, BotState.Me.ID);
-             points -= 4 * allCounteredTerritories;
-
-             var neighborBonuses = bonus.GetNeighborBonuses();
-             foreach (var neighborBonus in neighborBonuses)
-             {
-                 if ((neighborBonus.Territories.Any(o => BotState.IsOpponent(o.OwnerPlayerID) || o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution)))
-                     points -= 1;
-                 else if (neighborBonus.GetOwnedTerritories().Count > 0)
-                     points += 0.5;
-                 else
-                     points -= 0.4;
-             }
-
-             if (allCounteredTerritories > 0)
-                 points -= 7;
-
-             if (immediatelyCounteredTerritories > 0)
-                 points -= Math.Abs(points * 0.1);
+            var immediatelyCounteredTerritories = 0;
+            immediatelyCounteredTerritories = bonus.GetOwnedTerritoriesBorderingNeighborsOwnedByOpponentOrDistribution().Count;
 
 
-             var distanceFromUs = bonus.DistanceFrom(terr => terr.OwnerPlayerID == BotState.Me.ID);
-             if (distanceFromUs > 2)
-             {
-                 //Penalize weight of bonuses far away
-                 points *= (12 - distanceFromUs) / 10.0;
+
+            points -= 7 * immediatelyCounteredTerritories;
+
+            var allCounteredTerritories = GetCounteredTerritories(bonus, BotState.Me.ID);
+            points -= 4 * allCounteredTerritories;
+
+            var neighborBonuses = bonus.GetNeighborBonuses();
+            foreach (var neighborBonus in neighborBonuses)
+            {
+                if ((neighborBonus.Territories.Any(o => BotState.IsOpponent(o.OwnerPlayerID) || o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution)))
+                    points -= 1;
+                else if (neighborBonus.GetOwnedTerritories().Count > 0)
+                    points += 0.5;
+                else
+                    points -= 0.4;
             }
-             
+
+            if (allCounteredTerritories > 0)
+                points -= 7;
+
+            if (immediatelyCounteredTerritories > 0)
+                points -= Math.Abs(points * 0.1);
+
+
+            var distanceFromUs = bonus.DistanceFrom(terr => terr.OwnerPlayerID == BotState.Me.ID);
+            if (distanceFromUs > 2)
+            {
+                //Penalize weight of bonuses far away
+                points *= (12 - distanceFromUs) / 10.0;
+            }
+
             expansionValue = points;
             return expansionValue;
         }
@@ -203,11 +210,13 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             if (bonus.Amount == 0)
                 return true;
 
-            if ( bonus.ContainsOpponentPresence())
+            if (bonus.ContainsOpponentPresence())
                 return true;
 
-            if (bonus.IsOwnedByMyself())
+            if (bonus.IsOwnedByMyself() && BotState.NumberOfTurns != -1)
+            {
                 return true;
+            }
 
             return false;
         }
