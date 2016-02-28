@@ -17,6 +17,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
     {
         public BotMain()
         {
+           // this.bonusExpansionValueCalculator = new BonusExpansionValueCalculator(this);
             this.HistoryTracker = new HistoryTracker(this);
             this.MovesScheduler2 = new MovesScheduler(this);
             this.MovesCalculator = new MovesCalculator(this);
@@ -65,6 +66,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
             this.CardsMustPlay = cardsMustPlay;
         }
 
+     //   public BonusExpansionValueCalculator bonusExpansionValueCalculator;
         public PicksEvaluator PicksEvaluator;
         public OpponentDeploymentGuesser OpponentDeploymentGuesser;
         public LastVisibleMapUpdater LastVisibleMapUpdater;

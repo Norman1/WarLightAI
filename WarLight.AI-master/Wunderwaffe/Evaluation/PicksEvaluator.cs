@@ -39,8 +39,10 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 var map = BotMap.FromStanding(BotState, BotState.DistributionStanding);
 
                 map.Territories[terrID].OwnerPlayerID = BotState.Me.ID;
-
-                var r = map.MyExpansionValue().PlayerExpansionValue;
+                BotBonus bonus = map.Territories[terrID].Bonuses[0];
+                bonus.SetMyExpansionValueHeuristic();
+                double r = bonus.ExpansionValue;
+              //  var r = map.MyExpansionValue().PlayerExpansionValue;
                 AILog.Log("PlayerExpansionValue for " + terrID + " " + map.Territories[terrID].Details.Name + " is " + r);
                 return r;
             });

@@ -5,8 +5,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using WarLight.AI.Wunderwaffe.Bot;
-using WarLight.AI.Wunderwaffe.Heuristics;
 
 
 namespace WarLight.AI.Wunderwaffe.Bot
@@ -43,10 +41,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         public PlayerIDType? PreventTakeOverOpponent;
         public int ExpansionValueCategory = 0;
         public int DefenseValue = 0;
-
-        public BonusExpansionValueHeuristic MyExpansionValueHeuristic = null;
-
-        public Dictionary<PlayerIDType, BonusExpansionValueHeuristic> OpponentExpansionValueHeuristics = new Dictionary<PlayerIDType, BonusExpansionValueHeuristic>();
+        public double ExpansionValue = 0;
 
         public BotBonus(BotMap parent, BonusIDType id)
         {
@@ -58,39 +53,18 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         public int GetExpansionValue()
         {
-            return (int)this.MyExpansionValueHeuristic.ExpansionValue;
+            SetMyExpansionValueHeuristic();
+            return (int) ExpansionValue;
         }
         
 
         public void SetMyExpansionValueHeuristic()
         {
-            MyExpansionValueHeuristic = new BonusExpansionValueHeuristic(BotState, this, BotState.Me.ID);
+            this.ExpansionValue = BotState.BonusExpansionValueCalculator.GetExpansionValue2(this);
+
         }
 
-        public void InsertMyExpansionValueHeuristic(BonusExpansionValueHeuristic myValue)
-        {
-            this.MyExpansionValueHeuristic = myValue;
-        }
-        
 
-        public void SetOpponentExpansionValueHeuristic(PlayerIDType opponentID)
-        {
-            OpponentExpansionValueHeuristics[opponentID] = new BonusExpansionValueHeuristic(BotState, this, opponentID);
-        }
-        
-        /// <returns>A string with the name of the player that fully owns this Bonus</returns>
-        //public int? OwnedByPlayer()
-        //{
-        //    var playerID = Parent.Territories[Territories.First()].PlayerName;
-        //    foreach (var terrID in Territories)
-        //    {
-        //        if (playerID != Parent.Territories[terrID].PlayerName)
-        //            return null;
-        //    }
-        //    return playerID;
-        //}
-
-        
         /// <returns>A list with the Territories that are part of this Bonus</returns>
         public List<BotTerritory> Territories
         {

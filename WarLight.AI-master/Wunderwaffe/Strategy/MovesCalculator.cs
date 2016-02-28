@@ -31,15 +31,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             var movesSoFar = new Moves();
             BotState.GameState.EvaluateGameState();
 
-            //Never run away -- this isn't fun when playing against humans.
-            //if (BotState.GameState.IsGameCompletelyLost)
-            //{
-            //    Utility.Log("Game completely lost!");
-            //    new RunawayStrategy(BotState).CalculateRunawayMoves(movesSoFar);
-            //    CalculatedMoves = movesSoFar;
-            //    return;
-            //}
-
             PlayCardsTask.PlayCards(BotState, movesSoFar);
 
             AILog.Log("Starting armies: " + BotState.MyIncome.Total);
@@ -119,7 +110,7 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             DistanceCalculator.CalculateDistanceToImportantExpansionTerritories(BotState.ExpansionMap, BotState.VisibleMap);
             DistanceCalculator.CalculateDistanceToOpponentBorderCare3(BotState.ExpansionMap, BotState.VisibleMap);
             foreach (BotBonus emBonus in BotState.ExpansionMap.Bonuses.Values)
-                emBonus.InsertMyExpansionValueHeuristic(BotState.VisibleMap.Bonuses[emBonus.ID].MyExpansionValueHeuristic);
+                emBonus.ExpansionValue = BotState.VisibleMap.Bonuses[emBonus.ID].ExpansionValue;
             DistanceCalculator.CalculateDistanceToHighlyImportantExpansionTerritories(BotState.ExpansionMap, BotState.VisibleMap);
             DistanceCalculator.CalculateDistanceToOpponentBorderCare4(BotState.ExpansionMap, BotState.VisibleMap);
             var transferMoves = TransferMovesChooser.CalculateTransferMoves2(BotState);

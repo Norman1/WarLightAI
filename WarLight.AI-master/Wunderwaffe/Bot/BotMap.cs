@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using WarLight.AI.Wunderwaffe.Bot;
-using WarLight.AI.Wunderwaffe.Heuristics;
 
 using System;
 
@@ -46,14 +45,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         //    return _opponentExpansionValue[opponentID];
         //}
-
-        private PlayerExpansionValueHeuristic _myExpansionValue;
-        public PlayerExpansionValueHeuristic MyExpansionValue()
-        {
-            if (_myExpansionValue == null)
-                _myExpansionValue = new PlayerExpansionValueHeuristic(BotState, this, BotState.Me.ID);
-            return _myExpansionValue;
-        }
 
         /// <returns>: a new Map object exactly the same as this one</returns>
         public BotMap GetMapCopy()

@@ -226,8 +226,6 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             foreach (BotBonus bonus in mapToUse.Bonuses.Values)
             {
                 bonus.SetMyExpansionValueHeuristic();
-                foreach(var opponent in BotState.Opponents)
-                    bonus.SetOpponentExpansionValueHeuristic(opponent.ID);
             }
             foreach (var territory in mapToUse.Territories.Values)
             {
@@ -338,21 +336,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                         else
                             currentValue += vmBonus.Amount * 5;
                     }
-                    // Add stuff if it's the most important opponent Bonus
-                    var isMostImportantBonus = true;
 
-                    foreach (var opponent in BotState.Opponents)
-                    {
-                        var bonusExpansionValue = vmBonus.OpponentExpansionValueHeuristics[opponent.ID].ExpansionValue;
-                        foreach (BotBonus bonus in BotState.VisibleMap.Bonuses.Values)
-                        {
-                            if (bonus.OpponentExpansionValueHeuristics[opponent.ID].ExpansionValue > bonusExpansionValue)
-                                isMostImportantBonus = false;
-                        }
-                    }
-
-                    if (isMostImportantBonus && vmBonus.Amount > 0 && !vmBonus.IsOwnedByAnyOpponent() && !vmBonus.ContainsOwnPresence() && vmBonus.NeutralArmies.DefensePower < 8)
-                        currentValue += 1;
                 }
             }
 
@@ -407,10 +391,10 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
 
                 // vmBonus.setMyExpansionValueHeuristic();
                 // vmBonus.setMyExpansionValueHeuristic();
-                var bonusExpansionValue = vmBonus.MyExpansionValueHeuristic.ExpansionValue;
+                var bonusExpansionValue = vmBonus.ExpansionValue;
                 foreach (var bonus in BotState.VisibleMap.Bonuses.Values)
                 {
-                    if (bonus.MyExpansionValueHeuristic.ExpansionValue > bonusExpansionValue)
+                    if (bonus.ExpansionValue > bonusExpansionValue)
                         isMostImportantBonus = false;
                 }
                 if (isMostImportantBonus && vmBonus.Amount > 0 && !vmBonus
