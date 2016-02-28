@@ -38,7 +38,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             {
                 var map = BotMap.FromStanding(BotState, BotState.DistributionStanding);
 
-                map.Territories[terrID].OwnerPlayerID = BotState.Me.ID;
+               // map.Territories[terrID].OwnerPlayerID = BotState.Me.ID;
                 BotBonus bonus = map.Territories[terrID].Bonuses[0];
                 bonus.SetMyExpansionValueHeuristic();
                 double r = bonus.ExpansionValue;

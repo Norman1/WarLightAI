@@ -89,8 +89,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
 
         public void AddExtraValueForFirstTurnBonus(BotBonus bonus)
         {
-            bonus.ExpansionValue += bonus.ExpansionValue * 0.1;
-            //       bonus.MyExpansionValueHeuristic.AddExtraValueForFirstTurnBonus(bonus);
+            bonus.ExpansionValue += bonus.ExpansionValue * 0.5;
         }
 
         /// <summary>Classifies the Bonus according to the intel from the temporaryMap.
@@ -126,92 +125,117 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
 
 
 
-        private double IncomeNeutralsRatio(BotBonus bonus)
+        private double GetIncomeNeutralsRatio(BotBonus bonus)
         {
             var income = (double)bonus.Amount;
             var neutrals = (double)bonus.NeutralArmies.DefensePower;
-            // handle the case of a one territory bonus during picking stage
+
+            neutrals += bonus.Territories.Count(o => o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution) * BotState.Settings.InitialNeutralsInDistribution;
+
             if (neutrals == 0)
             {
                 neutrals = 1;
             }
 
-
-            neutrals += bonus.Territories.Count(o => o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution) * BotState.Settings.InitialNeutralsInDistribution;
             return income / neutrals;
         }
 
+        private double GetNeutralArmiesFactor(int neutralArmies)
+        {
+            double factor = 0.0;
+            factor = neutralArmies * 0.01;
+            factor = Math.Min(factor, 0.2);
+            return factor;
+        }
 
-        public double GetExpansionValue2(BotBonus bonus)
+        private double GetTerritoryFactor(int territories)
+        {
+            double factor = 0.0;
+            factor = territories * 0.01;
+            factor = Math.Min(factor, 0.05);
+            return factor;
+        }
+
+        private double GetImmediatelyCounteredTerritoryFactor(int immediatelyCounteredTerritories)
+        {
+            double factor = 0.0;
+            factor = immediatelyCounteredTerritories * 0.1;
+            factor = Math.Min(factor, 0.2);
+            return factor;
+        }
+
+        private double GetAllCounteredTerritoryFactor(int allCounteredTerritories)
+        {
+            double factor = 0.0;
+            factor = allCounteredTerritories * 0.1;
+            factor = Math.Min(factor, 0.2);
+            return factor;
+        }
+
+        private double GetOpponentInNeighborBonusFactor(int amountNeighborBonuses)
+        {
+            double factor = 0.0;
+            if (amountNeighborBonuses > 0)
+            {
+                factor = 0.075;
+            }
+            return factor;
+        }
+
+        public double GetExpansionValue(BotBonus bonus)
         {
             double expansionValue = 0.0;
             if (IsExpansionWorthless(bonus))
+            {
                 return expansionValue;
+            }
 
-            var points = IncomeNeutralsRatio(bonus) * 1000;
-            // var points = IncomeNeutralsRatio(bonus);
+            expansionValue = GetIncomeNeutralsRatio(bonus) * 1000;
 
             var neutralArmies = bonus.NeutralArmies.DefensePower;
+            double neutralArmiesFactor = GetNeutralArmiesFactor(neutralArmies);
 
-            if (neutralArmies > 8)
-                points -= neutralArmies * 4.5;
-            else if (neutralArmies > 6)
-                points -= neutralArmies * 3.5;
-            else if (neutralArmies > 4)
-                points -= neutralArmies * 2.5;
-
-            points -= 0.5 * bonus.Territories.Count;
-
-            var immediatelyCounteredTerritories = 0;
-            immediatelyCounteredTerritories = bonus.GetOwnedTerritoriesBorderingNeighborsOwnedByOpponentOrDistribution().Count;
+            int allTerritories = bonus.Territories.Count;
+            double territoryFactor = GetTerritoryFactor(allTerritories);
 
 
-
-            points -= 7 * immediatelyCounteredTerritories;
+            int immediatelyCounteredTerritories = bonus.GetOwnedTerritoriesBorderingNeighborsOwnedByOpponentOrDistribution().Count;
+            double immediatelyCounteredTerritoriesFactor = GetImmediatelyCounteredTerritoryFactor(immediatelyCounteredTerritories);
 
             var allCounteredTerritories = GetCounteredTerritories(bonus, BotState.Me.ID);
-            points -= 4 * allCounteredTerritories;
+            double allCounteredTerritoriesFactor = GetAllCounteredTerritoryFactor(allCounteredTerritories);
 
+            int amountNeighborBonusesWithOpponent = 0;
             var neighborBonuses = bonus.GetNeighborBonuses();
             foreach (var neighborBonus in neighborBonuses)
             {
-                if ((neighborBonus.Territories.Any(o => BotState.IsOpponent(o.OwnerPlayerID) || o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution)))
-                    points -= 1;
-                else if (neighborBonus.GetOwnedTerritories().Count > 0)
-                    points += 0.5;
-                else
-                    points -= 0.4;
+                if (neighborBonus.Territories.Any(o => BotState.IsOpponent(o.OwnerPlayerID)))
+                {
+                    amountNeighborBonusesWithOpponent++;
+                }
             }
+            double opponentNeighborBonusFactor = GetOpponentInNeighborBonusFactor(amountNeighborBonusesWithOpponent);
 
-            if (allCounteredTerritories > 0)
-                points -= 7;
+            double completeFactor = neutralArmiesFactor + territoryFactor + immediatelyCounteredTerritoriesFactor + allCounteredTerritoriesFactor + opponentNeighborBonusFactor;
+            completeFactor = Math.Min(completeFactor, 0.8);
 
-            if (immediatelyCounteredTerritories > 0)
-                points -= Math.Abs(points * 0.1);
+            expansionValue = expansionValue - (expansionValue * completeFactor);
 
-
-            var distanceFromUs = bonus.DistanceFrom(terr => terr.OwnerPlayerID == BotState.Me.ID);
-            if (distanceFromUs > 2)
-            {
-                //Penalize weight of bonuses far away
-                points *= (12 - distanceFromUs) / 10.0;
-            }
-
-            expansionValue = points;
             return expansionValue;
         }
 
 
-
-
-
         private bool IsExpansionWorthless(BotBonus bonus)
         {
-            if (bonus.Amount == 0)
+            if (bonus.Amount <= 0)
+            {
                 return true;
+            }
 
             if (bonus.ContainsOpponentPresence())
+            {
                 return true;
+            }
 
             if (bonus.IsOwnedByMyself() && BotState.NumberOfTurns != -1)
             {

@@ -53,14 +53,18 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         public int GetExpansionValue()
         {
-            SetMyExpansionValueHeuristic();
+            // TODO hack
+            if(ExpansionValue == 0)
+            {
+                SetMyExpansionValueHeuristic();
+            }
             return (int) ExpansionValue;
         }
         
 
         public void SetMyExpansionValueHeuristic()
         {
-            this.ExpansionValue = BotState.BonusExpansionValueCalculator.GetExpansionValue2(this);
+            this.ExpansionValue = BotState.BonusExpansionValueCalculator.GetExpansionValue(this);
 
         }
 
