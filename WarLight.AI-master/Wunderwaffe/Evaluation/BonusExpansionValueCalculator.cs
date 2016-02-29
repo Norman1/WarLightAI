@@ -229,6 +229,34 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             return -1 * adjustedFactor;
         }
 
+        private double getBorderTerritoriesFactor(BotBonus bonus)
+        {
+            double pickingStageBorderTerritoryMultiplicator = 0.01;
+            double inGameBorderTerritoryMultiplicator = 0.005;
+            int amountBorderTerritories = 0;
+            foreach (BotTerritory territory in bonus.Territories)
+            {
+                foreach (BotTerritory neighbor in territory.Neighbors)
+                {
+                    if (neighbor.Bonuses[0] != bonus)
+                    {
+                        amountBorderTerritories++;
+                    }
+                }
+            }
+            double adjustedFactor = 0;
+            if (BotState.NumberOfTurns == -1)
+            {
+                adjustedFactor = pickingStageBorderTerritoryMultiplicator * amountBorderTerritories;
+            }
+            else
+            {
+                adjustedFactor = inGameBorderTerritoryMultiplicator * amountBorderTerritories;
+            }
+            adjustedFactor = Math.Min(0.1, adjustedFactor);
+            return adjustedFactor;
+        }
+
 
         public double GetExpansionValue(BotBonus bonus, Boolean useNeighborBonusFactor)
         {
@@ -263,8 +291,9 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 }
             }
             double opponentNeighborBonusFactor = GetOpponentInNeighborBonusFactor(amountNeighborBonusesWithOpponent);
+            double borderTerritoriesFactor = getBorderTerritoriesFactor(bonus);
 
-            double completeFactor = neutralArmiesFactor + territoryFactor + immediatelyCounteredTerritoriesFactor + allCounteredTerritoriesFactor + opponentNeighborBonusFactor;
+            double completeFactor = neutralArmiesFactor + territoryFactor + immediatelyCounteredTerritoriesFactor + allCounteredTerritoriesFactor + opponentNeighborBonusFactor + borderTerritoriesFactor;
             if (useNeighborBonusFactor)
             {
                 completeFactor += GetNeighborBonusesFactor(bonus);
