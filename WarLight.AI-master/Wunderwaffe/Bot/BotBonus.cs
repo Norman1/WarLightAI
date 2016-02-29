@@ -64,7 +64,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         public void SetMyExpansionValueHeuristic()
         {
-            this.ExpansionValue = BotState.BonusExpansionValueCalculator.GetExpansionValue(this);
+            this.ExpansionValue = BotState.BonusExpansionValueCalculator.GetExpansionValue(this, true);
 
         }
 
@@ -105,7 +105,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         public List<BotBonus> GetNeighborBonuses()
         {
-            return this.Territories.SelectMany(o => o.Neighbors).SelectMany(o => o.Bonuses).Where(o => o.ID != this.ID).ToList();
+            return this.Territories.SelectMany(o => o.Neighbors).SelectMany(o => o.Bonuses).Where(o => o.ID != this.ID).Distinct().ToList();
         }
 
         public List<BotTerritory> GetOpponentTerritories()

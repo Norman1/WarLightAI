@@ -19,6 +19,10 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
     /// </remarks>
     public class BonusExpansionValueCalculator
     {
+        private double TerritoryMultiplicator = 0.9;
+        private double NeutralKillsMultiplicator = 1.0;
+        private double NeutralsMultiplicator = 0.5;
+
         public BotMain BotState;
         public BonusExpansionValueCalculator(BotMain state)
         {
@@ -124,20 +128,25 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
         }
 
 
-
-        private double GetIncomeNeutralsRatio(BotBonus bonus)
+        private double GetIncomeCostsRatio(BotBonus bonus)
         {
             var income = (double)bonus.Amount;
             var neutrals = (double)bonus.NeutralArmies.DefensePower;
-
             neutrals += bonus.Territories.Count(o => o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution) * BotState.Settings.InitialNeutralsInDistribution;
 
-            if (neutrals == 0)
+            int neutralKills = 0;
+            foreach (BotTerritory territory in bonus.NeutralTerritories)
             {
-                neutrals = 1;
+                neutralKills += (int)Math.Round(territory.Armies.DefensePower * BotState.Settings.DefensiveKillRate);
             }
 
-            return income / neutrals;
+            int territories = bonus.Territories.Count;
+
+            double adjustedTerritoryFactor = territories * TerritoryMultiplicator;
+            double adjustedNeutralKillsFactor = neutralKills * NeutralKillsMultiplicator;
+            double adjustedNeutralsFactor = neutrals * NeutralsMultiplicator;
+
+            return income * 100000 / (adjustedTerritoryFactor + adjustedNeutralKillsFactor + adjustedNeutralsFactor);
         }
 
         private double GetNeutralArmiesFactor(int neutralArmies)
@@ -182,7 +191,46 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             return factor;
         }
 
-        public double GetExpansionValue(BotBonus bonus)
+        // positive then bad, negative then good
+        private double GetNeighborBonusesFactor(BotBonus bonus)
+        {
+            if (BotState.NumberOfTurns != -1)
+            {
+                return 1;
+            }
+            int amountBetterSmallerBonuses = 0;
+            int amountBetterLargerBonuses = 0;
+            double neighborBonusValueToleranceFactor = 1.3;
+            double betterBiggerBonusesMultiplicator = 0.001;
+            double betterSmallerBonusesMultiplicator = 0.01;
+
+            List<BotBonus> neighborBonuses = bonus.GetNeighborBonuses();
+            double ourValue = GetExpansionValue(bonus, false);
+            foreach (BotBonus neighborBonus in neighborBonuses)
+            {
+                if (neighborBonus.Territories.Count(o => o.OwnerPlayerID == TerritoryStanding.AvailableForDistribution) == 0)
+                {
+                    continue;
+                }
+                double neighborBonusValue = GetExpansionValue(neighborBonus, false);
+                neighborBonusValue = neighborBonusValue * neighborBonusValueToleranceFactor;
+                if (neighborBonusValue >= ourValue && bonus.Territories.Count > neighborBonus.Territories.Count)
+                {
+                    amountBetterSmallerBonuses++;
+                }
+                else if (neighborBonusValue >= ourValue && bonus.Territories.Count < neighborBonus.Territories.Count)
+                {
+                    amountBetterLargerBonuses++;
+                }
+            }
+            double adjustedFactor = (betterBiggerBonusesMultiplicator * amountBetterLargerBonuses - betterSmallerBonusesMultiplicator * amountBetterSmallerBonuses);
+            adjustedFactor = Math.Max(-0.2, Math.Min(0.2, adjustedFactor));
+
+            return -1 * adjustedFactor;
+        }
+
+
+        public double GetExpansionValue(BotBonus bonus, Boolean useNeighborBonusFactor)
         {
             double expansionValue = 0.0;
             if (IsExpansionWorthless(bonus))
@@ -190,7 +238,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 return expansionValue;
             }
 
-            expansionValue = GetIncomeNeutralsRatio(bonus) * 1000;
+            expansionValue = GetIncomeCostsRatio(bonus);
 
             var neutralArmies = bonus.NeutralArmies.DefensePower;
             double neutralArmiesFactor = GetNeutralArmiesFactor(neutralArmies);
@@ -217,6 +265,10 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             double opponentNeighborBonusFactor = GetOpponentInNeighborBonusFactor(amountNeighborBonusesWithOpponent);
 
             double completeFactor = neutralArmiesFactor + territoryFactor + immediatelyCounteredTerritoriesFactor + allCounteredTerritoriesFactor + opponentNeighborBonusFactor;
+            if (useNeighborBonusFactor)
+            {
+                completeFactor += GetNeighborBonusesFactor(bonus);
+            }
             completeFactor = Math.Min(completeFactor, 0.8);
 
             expansionValue = expansionValue - (expansionValue * completeFactor);
