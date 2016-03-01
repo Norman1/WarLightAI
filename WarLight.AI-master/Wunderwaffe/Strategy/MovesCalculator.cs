@@ -279,7 +279,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                     alreadyHandledBonuses.Add(bonus);
                     var stillAvailableDeployment = BotState.MyIncome.Total - moves.GetTotalDeployment();
                     var plan = BotState.BonusValueCalculator.GetPlanForBonus(bonus);
-                    //Utility.Log("Plan for bonus " + bonus.Details.Name + " is " + plan);
                     if (plan == BonusPlan.Break)
                     {
                         var visibleTerritories = bonus.GetVisibleOpponentTerritories();
@@ -337,77 +336,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             }
         }
 
-        // private void calculateXBonusMoves(Moves moves, BotTerritory.DeploymentType conservativeLevel) {
-        // boolean solutionFound = true;
-        // List<Bonus> alreadyHandledBonuses = new ArrayList<Bonus>();
-        //
-        // while (solutionFound) {
-        // solutionFound = false;
-        // BonusValueCalculator.calculatBonusValues(BotState.WorkingMap,
-        // BotState.VisibleMap);
-        //
-        // TerritoryValueCalculator.calculateTerritoryValues(BotState.VisibleMap,
-        // BotState.WorkingMap);
-        // List<Bonus> BonusesToX = BonusValueCalculator
-        // .getSortedBonusesAdjustedFactor(BotState.VisibleMap);
-        // BonusesToX.removeAll(alreadyHandledBonuses);
-        //
-        // for (Bonus Bonus : BonusesToX) {
-        // alreadyHandledBonuses.add(Bonus);
-        // int stillAvailableDeployment = BotState.StartingArmies - moves.GetTotalDeployment();
-        // String plan = BonusValueCalculator.getPlanForBonus(Bonus);
-        // if (plan == "BREAK")) {
-        // List<Territory> visibleTerritories = Bonus.GetVisibleOpponentTerritories();
-        // Moves breakBonusMoves = BreakTerritoriesTask.calculateBreakTerritoriesTask(visibleTerritories,
-        // stillAvailableDeployment, conservativeLevel);
-        // if (breakBonusMoves != null) {
-        // System.err.println("BREAK moves calculated for Bonus " + Bonus.ID);
-        // MovesCommitter.committMoves(breakBonusMoves);
-        // moves.mergeMoves(breakBonusMoves);
-        // solutionFound = true;
-        // break;
-        // }
-        // } else if (plan == "DEFEND")) {
-        // Moves defendBonusMoves = DefendBonusTask.calculateDefendBonusTask(Bonus,
-        // stillAvailableDeployment, false, conservativeLevel);
-        // if (defendBonusMoves != null) {
-        // if (defendBonusMoves.GetTotalDeployment ()> 0
-        // || defendBonusMoves.attackTransferMoves.size() > 0) {
-        // System.err.println("DEFEND moves calculated for Bonus " + Bonus.ID);
-        // }
-        // MovesCommitter.committMoves(defendBonusMoves);
-        // moves.mergeMoves(defendBonusMoves);
-        // solutionFound = true;
-        // break;
-        // }
-        //
-        // }
-        //
-        // else if (plan == "TAKE_OVER") /* && conservativeLevel == 1 */) {
-        // Moves takeOverMoves = TakeBonusOverTask.calculateTakeBonusOverTask(
-        // stillAvailableDeployment, Bonus, conservativeLevel);
-        // if (takeOverMoves != null) {
-        // System.err.println("TAKE_OVER moves calculated for Bonus " + Bonus.ID);
-        // MovesCommitter.committMoves(takeOverMoves);
-        // moves.mergeMoves(takeOverMoves);
-        // solutionFound = true;
-        // break;
-        // }
-        // } else if (plan == "PREVENT_TAKE_OVER")) {
-        // Moves preventTakeOverMoves = PreventBonusTask.calculatePreventBonusTask(Bonus,
-        // stillAvailableDeployment, conservativeLevel);
-        // MovesCommitter.committMoves(preventTakeOverMoves);
-        // moves.mergeMoves(preventTakeOverMoves);
-        // solutionFound = true;
-        // if (preventTakeOverMoves.GetTotalDeployment() > 0
-        // || preventTakeOverMoves.attackTransferMoves.size() > 0) {
-        // System.err.println("PREVENT_TAKE_OVER moves calculated for Bonus " + Bonus.ID);
-        // }
-        // break;
-        // }
-        // }
-        // }
-        // }
         private void CalculateSnipeBonusMoves(Moves moves)
         {
             var maxDeployment = BotState.MyIncome.Total - moves.GetTotalDeployment();

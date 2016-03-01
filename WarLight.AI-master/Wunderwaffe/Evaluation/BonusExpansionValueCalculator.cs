@@ -6,8 +6,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using WarLight.AI.Wunderwaffe.Bot;
-
-
+using WarLight.AI.Wunderwaffe.BasicAlgorithms;
 
 namespace WarLight.AI.Wunderwaffe.Evaluation
 {
@@ -27,6 +26,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
         public BonusExpansionValueCalculator(BotMain state)
         {
             this.BotState = state;
+
         }
 
         public List<BotBonus> SortBonuses(BotMap mapToUse, PlayerIDType playerID)
@@ -198,8 +198,8 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             {
                 return 1;
             }
-            int amountBetterSmallerBonuses = 0;
-            int amountBetterLargerBonuses = 0;
+            List<BotBonus> betterSmallerBonuses = new List<BotBonus>();
+            List<BotBonus> betterLargerBonuses = new List<BotBonus>();
             double neighborBonusValueToleranceFactor = 1.3;
             double betterBiggerBonusesMultiplicator = 0.001;
             double betterSmallerBonusesMultiplicator = 0.01;
@@ -216,14 +216,29 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 neighborBonusValue = neighborBonusValue * neighborBonusValueToleranceFactor;
                 if (neighborBonusValue >= ourValue && bonus.Territories.Count > neighborBonus.Territories.Count)
                 {
-                    amountBetterSmallerBonuses++;
+                    betterSmallerBonuses.Add(bonus);
                 }
                 else if (neighborBonusValue >= ourValue && bonus.Territories.Count < neighborBonus.Territories.Count)
                 {
-                    amountBetterLargerBonuses++;
+                    betterLargerBonuses.Add(bonus);
                 }
             }
-            double adjustedFactor = (betterBiggerBonusesMultiplicator * amountBetterLargerBonuses - betterSmallerBonusesMultiplicator * amountBetterSmallerBonuses);
+            int amountBetterLittleSmallerBonuses = 0;
+            int amountBetterVerySmallerBonuses = 0;
+            foreach (BotBonus smallerNeighbor in betterSmallerBonuses)
+            {
+                if (smallerNeighbor.Territories.Count <= bonus.Territories.Count / 2)
+                {
+                    amountBetterVerySmallerBonuses++;
+                }
+                else
+                {
+                    amountBetterLittleSmallerBonuses++;
+                }
+            }
+            double adjustedFactor =
+                (betterBiggerBonusesMultiplicator * betterLargerBonuses.Count - betterSmallerBonusesMultiplicator * amountBetterLittleSmallerBonuses - betterSmallerBonusesMultiplicator
+             * 2 * amountBetterVerySmallerBonuses);
             adjustedFactor = Math.Max(-0.2, Math.Min(0.2, adjustedFactor));
 
             return -1 * adjustedFactor;

@@ -42,10 +42,8 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                         guessedOpponentDeployment = Math.Min(lvmTerritory.GetTotalDeployment(BotTerritory.DeploymentType.Normal), opponentIncome);
                         if (HasDeploymentReasonDisapeared(lvmTerritory, vmTerritory_1))
                         {
-                            // guessedOpponentDeployment = Math.min(3, guessedOpponentDeployment);
                             var boundDeployment = GetBoundOpponentDeployment(opponentID, vmTerritory_1);
                             var maxDeployment = BotState.GetGuessedOpponentIncome(opponentID, BotState.VisibleMap) - boundDeployment;
-                            // guessedOpponentDeployment = maxDeployment;
                             guessedOpponentDeployment = Math.Min(5, maxDeployment);
                         }
                     }
@@ -53,10 +51,8 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                     {
                         var boundDeployment = GetBoundOpponentDeployment(opponentID, vmTerritory_1);
                         var maxDeployment = BotState.GetGuessedOpponentIncome(opponentID, BotState.VisibleMap) - boundDeployment;
-                        // guessedOpponentDeployment = maxDeployment;
                         guessedOpponentDeployment = Math.Max(1, Math.Min(5, maxDeployment));
                     }
-                    // guessedOpponentDeployment = 5;
                     var pam = new BotOrderDeploy(opponentID, vmTerritory_1, guessedOpponentDeployment);
                     MovesCommitter.CommittPlaceArmiesMove(pam);
                     var conservativePam = new BotOrderDeploy(opponentID, vmTerritory_1, BotState.GetGuessedOpponentIncome(opponentID, BotState.VisibleMap));
