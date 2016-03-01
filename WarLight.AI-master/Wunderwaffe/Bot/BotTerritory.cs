@@ -1,6 +1,6 @@
-﻿ /*
- * This code was auto-converted from a java project.
- */
+﻿/*
+* This code was auto-converted from a java project.
+*/
 
 using System;
 using System.Linq;
@@ -106,7 +106,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         public List<BotTerritory> GetNeighborsWithinSameBonus()
         {
-            var outvar = new List<BotTerritory>();
+            List<BotTerritory> outvar = new List<BotTerritory>();
             foreach (var neighbor in this.Neighbors)
             {
                 if (Details.PartOfBonuses.Any(o => neighbor.Details.PartOfBonuses.Contains(o)))
@@ -114,8 +114,8 @@ namespace WarLight.AI.Wunderwaffe.Bot
             }
             return outvar;
         }
-        
-        
+
+
         public List<BotBonus> Bonuses
         {
             get
@@ -128,7 +128,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         {
             Null, Normal, Conservative
         }
-        
+
         /// <summary>type 1 = normal deployment, type 2 = conservative deployment</summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -154,7 +154,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         }
 
 
-        
+
         public List<BotOrderAttackTransfer> GetExpansionMoves()
         {
             var outvar = new List<BotOrderAttackTransfer>();
@@ -165,7 +165,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
             }
             return outvar;
         }
-        
+
         public Armies GetArmiesAfterDeployment(DeploymentType type)
         {
             var armies = this.Armies;
@@ -185,7 +185,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
             return outvar.Subtract(new Armies(1));
         }
-       
+
         /// <param name="territory">a Territory object</param>
         /// <returns>True if this Territory is a neighbor of given Territory, false otherwise</returns>
         public bool IsNeighbor(BotTerritory territory)
@@ -200,8 +200,8 @@ namespace WarLight.AI.Wunderwaffe.Bot
         //    return playerID == this.playerID;
         //}
 
-        
-        
+
+
         public int GetAmountOfBordersToOpponentBonus()
         {
             var outvar = 0;
@@ -258,9 +258,9 @@ namespace WarLight.AI.Wunderwaffe.Bot
         {
             get
             {
-                return Details.ConnectedTo.Select(o => Parent.Territories[o]).ToList();
+                return Details.ConnectedTo.Select(o => Parent.Territories[o]).Distinct().ToList();
             }
         }
-        
+
     }
 }

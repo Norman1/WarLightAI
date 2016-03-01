@@ -256,6 +256,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                     if (neighbor.Bonuses[0] != bonus)
                     {
                         amountBorderTerritories++;
+                        break;
                     }
                 }
             }

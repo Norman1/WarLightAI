@@ -220,9 +220,6 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
         /// <param name="mapToUse">the map to use for calculating the values</param>
         public void CalculateTerritoryValues(BotMap mapToWriteIn, BotMap mapToUse)
         {
-            // TODO doesen't work for some reason
-            // BotState.VisibleMap.setOpponentExpansionValue();
-            // BotState.VisibleMap.setMyExpansionValue();
             foreach (BotBonus bonus in mapToUse.Bonuses.Values)
             {
                 bonus.SetMyExpansionValueHeuristic();

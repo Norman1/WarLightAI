@@ -74,7 +74,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         {
             get
             {
-                return Details.Territories.Select(o => Parent.Territories[o]).ToList();
+                return Details.Territories.Select(o => Parent.Territories[o]).Distinct().ToList();
             }
         }
 
