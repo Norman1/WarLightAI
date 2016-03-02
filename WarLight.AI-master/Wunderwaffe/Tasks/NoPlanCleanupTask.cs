@@ -72,7 +72,9 @@ namespace WarLight.AI.Wunderwaffe.Tasks
             //}
             if (fromTerritory.GetIdleArmies().AttackPower <= 1)
                 isSmart = false;
-            if (toTerritory.Armies.DefensePower > Math.Round(fromTerritory.GetIdleArmies().AttackPower * state.Settings.OffensiveKillRate))
+
+            if (toTerritory.Armies.DefensePower > toTerritory.getOwnKills(fromTerritory.GetIdleArmies().AttackPower,toTerritory.Armies.DefensePower))
+                //if (toTerritory.Armies.DefensePower > Math.Round(fromTerritory.GetIdleArmies().AttackPower * state.Settings.OffensiveKillRate))
                 isSmart = false;
             var distanceCondition1 = fromTerritory.DistanceToOpponentBorder <= 4;
             var distanceCondition2 = toTerritory.GetOpponentNeighbors().Count == 0;

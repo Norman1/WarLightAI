@@ -89,7 +89,8 @@ namespace WarLight.AI.Wunderwaffe.Bot
         {
             var remainingArmies = this.GetArmiesAfterDeployment(type);
             foreach (var atm in IncomingMoves)
-                remainingArmies = remainingArmies.Subtract(new Armies(SharedUtility.Round(atm.Armies.NumArmies * BotState.Settings.OffensiveKillRate)));
+                //remainingArmies = remainingArmies.Subtract(new Armies(SharedUtility.Round(atm.Armies.NumArmies * BotState.Settings.OffensiveKillRate)));
+                remainingArmies = remainingArmies.Subtract(new Armies(getOwnKills(atm.Armies.NumArmies, remainingArmies.DefensePower)));
 
             if (!remainingArmies.Fogged && remainingArmies.NumArmies < 1)
                 remainingArmies = new Armies(1, specialUnits: remainingArmies.SpecialUnits);
@@ -262,5 +263,32 @@ namespace WarLight.AI.Wunderwaffe.Bot
             }
         }
 
+        public int getNeededBreakArmies(int opponentDefendingArmies)
+        {
+            int neededAttackArmies = (int)Math.Round((opponentDefendingArmies - 0.5) / BotState.Settings.OffensiveKillRate);
+            if (getOwnKills(neededAttackArmies, opponentDefendingArmies) < opponentDefendingArmies)
+            {
+                neededAttackArmies++;
+            }
+            return neededAttackArmies;
+        }
+
+        public int getOwnKills(int ownAttackingArmies, int opponentDefendingArmies)
+        {
+            int expectedKills = (int)Math.Round(ownAttackingArmies * BotState.Settings.OffensiveKillRate);
+            int expectedOwnLosses = (int)Math.Round(opponentDefendingArmies * BotState.Settings.DefensiveKillRate);
+            if (expectedKills >= opponentDefendingArmies && expectedOwnLosses >= ownAttackingArmies)
+            {
+                expectedKills = expectedKills - 1;
+            }
+
+            return Math.Min(expectedKills, opponentDefendingArmies);
+        }
+
     }
+
+
+
+
+
 }

@@ -1,6 +1,6 @@
-﻿ /*
- * This code was auto-converted from a java project.
- */
+﻿/*
+* This code was auto-converted from a java project.
+*/
 
 using System;
 using System.Collections.Generic;
@@ -39,7 +39,8 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 if (vmNeutralTerritory.IsVisible)
                 {
                     var attackingArmies = vmNeutralTerritory.GetIncomingArmies();
-                    if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= vmNeutralTerritory.Armies.DefensePower)
+                    if (vmNeutralTerritory.getOwnKills(attackingArmies.AttackPower, vmNeutralTerritory.Armies.DefensePower) >= vmNeutralTerritory.Armies.DefensePower)
+                        //if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= vmNeutralTerritory.Armies.DefensePower)
                         vmNeutralTerritoriesThatWeTake.Add(vmNeutralTerritory);
                 }
             }

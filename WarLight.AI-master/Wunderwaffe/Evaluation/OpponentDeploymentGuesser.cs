@@ -103,6 +103,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             if (opponentTerritory.AttackTerritoryValue > TerritoryValueCalculator.LOWEST_HIGH_PRIORITY_VALUE)
                 ourAttackingArmies += 5;
 
+            // TODO adapt to no luck
             neededDeployment = Math.Max(0, (int)Math.Round(ourAttackingArmies * BotState.Settings.OffensiveKillRate));
 
             return neededDeployment;

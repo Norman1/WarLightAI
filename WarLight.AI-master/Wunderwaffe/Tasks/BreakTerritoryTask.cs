@@ -88,7 +88,8 @@ namespace WarLight.AI.Wunderwaffe.Tasks
             var outvar = new Moves();
             var opponentArmies = opponentTerritory.Armies.DefensePower;
             opponentArmies += opponentDeployment;
-            var neededAttackArmies = SharedUtility.Round(opponentArmies / BotState.Settings.OffensiveKillRate);
+            var neededAttackArmies = opponentTerritory.getNeededBreakArmies(opponentArmies);
+            //var neededAttackArmies = SharedUtility.Round(opponentArmies / BotState.Settings.OffensiveKillRate);
             var ownedNeighbors = opponentTerritory.GetOwnedNeighbors();
             var presortedOwnedNeighbors = BotState.TerritoryValueCalculator.SortDefenseValue(ownedNeighbors);
             var sortedOwnedNeighbors = BotMap.GetOrderedListOfTerritoriesByIdleArmies(

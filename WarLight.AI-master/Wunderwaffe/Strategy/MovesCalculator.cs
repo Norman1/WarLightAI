@@ -44,13 +44,10 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             AILog.Log("Armies used after calculateXBonusMoves type 2: " + movesSoFar.GetTotalDeployment());
             CalculateSnipeBonusMoves(movesSoFar);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
-            AILog.Log("Armies used after calculateSnipeBonusMoves" + movesSoFar.GetTotalDeployment());
+            AILog.Log("Armies used after calculateSnipeBonusMoves: " + movesSoFar.GetTotalDeployment());
             CalculateXBonusMoves(movesSoFar, 0, BotTerritory.DeploymentType.Normal);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
-            // calculateXBonusMoves(movesSoFar, 0, 1);
-            // Utility.Debug("Armies used after calculateXBonusMoves type 0: " + movesSoFar.GetTotalDeployment(), 1);
             BotState.TerritoryValueCalculator.CalculateTerritoryValues(BotState.VisibleMap, BotState.WorkingMap);
-            // int movesWithoutExpansion = movesSoFar.attackTransferMoves.size();
             CalculateExpansionMoves(movesSoFar, 100000, -51000);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             AILog.Log("Armies used after calculateExpansionMoves: " + movesSoFar.GetTotalDeployment());

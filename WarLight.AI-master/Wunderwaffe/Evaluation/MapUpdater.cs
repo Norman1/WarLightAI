@@ -1,6 +1,6 @@
-﻿ /*
- * This code was auto-converted from a java project.
- */
+﻿/*
+* This code was auto-converted from a java project.
+*/
 
 using System;
 using WarLight.AI.Wunderwaffe.Bot;
@@ -28,7 +28,8 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 {
                     var toBeKilledArmies = vmTerritory.GetArmiesAfterDeployment(BotTerritory.DeploymentType.Normal);
                     var attackingArmies = vmTerritory.GetIncomingArmies();
-                    if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= toBeKilledArmies.DefensePower)
+                    if (vmTerritory.getOwnKills(attackingArmies.AttackPower, toBeKilledArmies.DefensePower) >= vmTerritory.Armies.DefensePower)
+                    //if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= toBeKilledArmies.DefensePower)
                     {
                         wmTerritory.OwnerPlayerID = BotState.Me.ID;
                         wmTerritory.Armies = vmTerritory.GetIncomingArmies().Subtract(new Armies(SharedUtility.Round(vmTerritory.GetArmiesAfterDeployment(BotTerritory.DeploymentType.Normal).DefensePower * BotState.Settings.DefensiveKillRate)));
@@ -51,8 +52,8 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             var vmTerritory = BotState.VisibleMap.Territories[toTerritoryID];
             var toBeKilledArmies = vmTerritory.GetArmiesAfterDeployment(BotTerritory.DeploymentType.Normal);
             var attackingArmies = vmTerritory.GetIncomingArmies();
-
-            if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= toBeKilledArmies.DefensePower)
+            if (vmTerritory.getOwnKills(attackingArmies.AttackPower, toBeKilledArmies.DefensePower) >= toBeKilledArmies.DefensePower)
+                //if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= toBeKilledArmies.DefensePower)
                 wmTerritory.OwnerPlayerID = BotState.Me.ID;
         }
     }

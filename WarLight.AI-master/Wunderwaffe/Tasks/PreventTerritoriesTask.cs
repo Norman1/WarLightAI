@@ -41,7 +41,9 @@ namespace WarLight.AI.Wunderwaffe.Tasks
             }
             var currentArmies = highestDefenceValueTerritory.GetArmiesAfterDeploymentAndIncomingMoves().DefensePower;
             var attackingArmies = CalculateOpponentAttackingArmies(highestDefenceValueTerritory, opponentAttacks);
+
             var minimumNeededArmies = SharedUtility.Round(attackingArmies.AttackPower * state.Settings.OffensiveKillRate);
+            //var minimumNeededArmies = SharedUtility.Round(attackingArmies.AttackPower * state.Settings.OffensiveKillRate);
             var maximumNeededArmies = minimumNeededArmies;
             var maximumMissingArmies = Math.Max(0, maximumNeededArmies - currentArmies);
             var minimumMissingArmies = Math.Max(0, minimumNeededArmies - currentArmies);

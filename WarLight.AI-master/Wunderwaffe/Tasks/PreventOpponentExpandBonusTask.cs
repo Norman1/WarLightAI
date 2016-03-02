@@ -121,7 +121,9 @@ namespace WarLight.AI.Wunderwaffe.Tasks
         private Moves CalculateAttackNeutralMoves(BotTerritory neutralTerritory, int maxDeployment)
         {
             Moves outvar = null;
-            var neededAttackArmies = SharedUtility.Round(neutralTerritory.Armies.DefensePower / BotState.Settings.OffensiveKillRate);
+            var neededAttackArmies = neutralTerritory.getNeededBreakArmies(neutralTerritory.Armies.DefensePower);
+            AILog.Log("----------> "+neededAttackArmies);
+            //var neededAttackArmies = SharedUtility.Round(neutralTerritory.Armies.DefensePower / BotState.Settings.OffensiveKillRate);
             var ownedNeighbors = neutralTerritory.GetOwnedNeighbors();
             var bestNeighbor = ownedNeighbors[0];
             foreach (var ownedNeighbor in ownedNeighbors)
