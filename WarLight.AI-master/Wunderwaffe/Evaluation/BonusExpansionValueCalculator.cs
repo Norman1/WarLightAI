@@ -253,7 +253,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             {
                 foreach (BotTerritory neighbor in territory.Neighbors)
                 {
-                    if (neighbor.Bonuses[0] != bonus)
+                    if (neighbor.Bonuses.Count == 0 || neighbor.Bonuses[0] != bonus)
                     {
                         amountBorderTerritories++;
                         break;
