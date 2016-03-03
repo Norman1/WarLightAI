@@ -69,8 +69,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
         public List<BotTerritory> GetSortedFlankingValueTerritories()
         {
             List<BotTerritory> outvar = new List<BotTerritory>();
-            var visibleNeutrals = BotState.VisibleMap.GetVisibleNeutralTerritories
-                ();
+            var visibleNeutrals = BotState.VisibleMap.GetVisibleNeutralTerritories();
             List<BotTerritory> visibleFlankingTerritories = new List<BotTerritory>();
             foreach (var visibleNeutral in visibleNeutrals)
             {

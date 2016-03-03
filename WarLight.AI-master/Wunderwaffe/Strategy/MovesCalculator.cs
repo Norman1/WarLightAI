@@ -48,7 +48,7 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             CalculateXBonusMoves(movesSoFar, 0, BotTerritory.DeploymentType.Normal);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             BotState.TerritoryValueCalculator.CalculateTerritoryValues(BotState.VisibleMap, BotState.WorkingMap);
-            CalculateExpansionMoves(movesSoFar, 100000, -51000);
+            CalculateExpansionMoves(movesSoFar, 10000000, -51000);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             AILog.Log("Armies used after calculateExpansionMoves: " + movesSoFar.GetTotalDeployment());
             // int movesWithExpansion = movesSoFar.attackTransferMoves.size();
@@ -423,12 +423,14 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                     }
                     Moves oneStepMoves = null;
                     if (!opponentBorderPresent)
+                        // TODO probably bug when acceptStackOnly = true (armiesforExpansion = 0 and totalDeployment = 0), infinite loop.
                         oneStepMoves = BotState.TakeTerritoriesTaskCalculator.CalculateOneStepExpandBonusTask(armiesForExpansion, bonusToExpand, true, BotState.WorkingMap, BotTerritory.DeploymentType.Normal);
                     else
                         oneStepMoves = BotState.TakeTerritoriesTaskCalculator.CalculateOneStepExpandBonusTask(armiesForExpansion, bonusToExpand, false, BotState.WorkingMap, BotTerritory.DeploymentType.Normal);
 
                     if (oneStepMoves != null)
                     {
+                       // AILog.Log(armiesForExpansion+ "    "+oneStepMoves.GetTotalDeployment() );
                         firstStep = false;
                         armiesForExpansion -= oneStepMoves.GetTotalDeployment();
                         MovesCommitter.CommittMoves(BotState, oneStepMoves);

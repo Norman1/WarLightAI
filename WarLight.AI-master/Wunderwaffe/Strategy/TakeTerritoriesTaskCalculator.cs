@@ -52,11 +52,17 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                         var territoryToDeploy = takeTerritoryMoves.Orders.OfType<BotOrderDeploy>().First().Territory;
                         var pam = new BotOrderDeploy(BotState.Me.ID, territoryToDeploy, maxDeployment);
                         outvar.AddOrder(pam);
+                        return outvar;
                     }
-                    return outvar;
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
+                {
                     return null;
+                }
             }
             else
             {
