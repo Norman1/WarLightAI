@@ -47,6 +47,7 @@ namespace WarLight.AI
             AILog.Log("Creating game...");
             var gameID = BotGameAPI.CreateGame(Enumerable.Range(10, bots.Length).Select(o => PlayerInvite.Create((PlayerIDType)o, PlayerInvite.NoTeam, null)), "PlayBots", null, gameSettings =>
             {
+                gameSettings["Fog"] = "NoFog"; //turn off fog so we can see what the AI is doing
                 gameSettings["MaxCardsHold"] = 999;
                 gameSettings["ReinforcementCard"] = "none";
             });
