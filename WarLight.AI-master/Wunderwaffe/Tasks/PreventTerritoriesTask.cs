@@ -113,8 +113,6 @@ namespace WarLight.AI.Wunderwaffe.Tasks
 
                 var stilIdleArmies = CalculateStillOpponentIdleArmies(state, attackingOpponentTerritory, outvar);
                 var attackingOpponentArmies = SharedUtility.Round(ownedTerritory.GetArmiesAfterDeploymentAndIncomingAttacks(conservativeLevel).DefensePower / state.Settings.OffensiveKillRate);
-                // int attackingOpponentArmies = (int) Math.ceil(ownedTerritory.Armies / 0.6);
-                // int attackingOpponentArmies = (int) Math.ceil(ownedTerritory.Armies / 0.6);
                 var opponentDeployment = Math.Max(0, attackingOpponentArmies - stilIdleArmies.DefensePower);
                 if (opponentDeployment > 0)
                     outvar.AddOrder(new BotOrderDeploy(opponentID, attackingOpponentTerritory, opponentDeployment));

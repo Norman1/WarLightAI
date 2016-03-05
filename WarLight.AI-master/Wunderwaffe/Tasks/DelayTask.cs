@@ -43,11 +43,7 @@ namespace WarLight.AI.Wunderwaffe.Tasks
                     maximumNewDelays--;
                 }
             }
-            // TODO verschoben
-            // Only add step 2 delays when really needed
-            // if (!isRiskyAttackPresent(movesSoFar)) {
-            // return out;
-            // }
+
             // Step 2: If the minMovesBeforeRiskyAttack constraint isn't fulfilled
             // then also add delay moves next to the opponent
             var stillNeededDelays = Math.Max(0, minMovesBeforeRiskyAttack - (amountOfSafeMoves

@@ -24,7 +24,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         public DeploymentHistory DeploymentHistory;
 
-        // public int opponentDeployment;
         public int GetOpponentDeployment(PlayerIDType opponentID)
         {
             return BotState.PrevTurn.Where(o => o.PlayerID == opponentID).OfType<GameOrderDeploy>().Sum(o => o.NumArmies);

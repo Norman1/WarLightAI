@@ -39,7 +39,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
             {
                 var newBonus = new BotBonus(newMap, bonus.ID);
                 newBonus.ExpansionValueCategory = bonus.ExpansionValueCategory;
-                // newBonus.setExpansionValue(sr.ExpansionValue);
                 newMap.Bonuses.Add(newBonus.ID, newBonus);
             }
             foreach (var territory in Territories.Values)

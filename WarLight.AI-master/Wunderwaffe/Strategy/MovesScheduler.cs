@@ -275,8 +275,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                     {
                         if (unhandledMove.Armies.AttackPower * BotState.Settings.OffensiveKillRate > mmOpponentTerritory.Armies.DefensePower + BotState.GetGuessedOpponentIncome(mmOpponentTerritory.OwnerPlayerID, BotState.VisibleMap) + 3)
                         {
-                            AILog.Log("found substitute move: " + unhandledMove);
-                            AILog.Log(unhandledMove.To.GetArmiesAfterDeploymentAndIncomingAttacks(BotTerritory.DeploymentType.Conservative) + " | " + mmOpponentTerritory.GetArmiesAfterDeploymentAndIncomingAttacks(BotTerritory.DeploymentType.Conservative));
                             return unhandledMove;
                         }
                     }

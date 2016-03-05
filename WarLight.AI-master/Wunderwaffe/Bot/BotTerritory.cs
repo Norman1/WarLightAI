@@ -194,15 +194,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
             return Details.ConnectedTo.Contains(territory.ID);
         }
 
-        /// <param name="playerID">A string with a player's name</param>
-        /// <returns>True if this territory is owned by given playerID, false otherwise</returns>
-        //public bool OwnedByPlayer(PlayerIDType playerID)
-        //{
-        //    return playerID == this.playerID;
-        //}
-
-
-
         public int GetAmountOfBordersToOpponentBonus()
         {
             var outvar = 0;
@@ -286,9 +277,4 @@ namespace WarLight.AI.Wunderwaffe.Bot
         }
 
     }
-
-
-
-
-
 }

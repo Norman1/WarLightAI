@@ -42,14 +42,11 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 BotBonus bonus = map.Territories[terrID].Bonuses[0];
                 bonus.SetMyExpansionValueHeuristic();
                 double r = bonus.ExpansionValue;
-                AILog.Log("PlayerExpansionValue for " + terrID + " " + map.Territories[terrID].Details.Name + " is " + r);
                 return r;
             });
 
-            //TODO: Take the top numPicks * 2, then normalize their values and do a weighted random.
             var ret = weights.OrderByDescending(o => o.Value).Take(maxPicks).Select(o => o.Key).Distinct().ToList();
 
-            AILog.Log("Final picks: " + ret.JoinToStrings(","));
             return ret;
         }
 

@@ -40,7 +40,6 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                 {
                     var attackingArmies = vmNeutralTerritory.GetIncomingArmies();
                     if (vmNeutralTerritory.getOwnKills(attackingArmies.AttackPower, vmNeutralTerritory.Armies.DefensePower) >= vmNeutralTerritory.Armies.DefensePower)
-                        //if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= vmNeutralTerritory.Armies.DefensePower)
                         vmNeutralTerritoriesThatWeTake.Add(vmNeutralTerritory);
                 }
             }

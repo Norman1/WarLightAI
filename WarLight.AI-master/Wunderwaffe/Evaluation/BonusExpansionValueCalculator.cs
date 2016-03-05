@@ -33,7 +33,6 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
         {
             var allBonuses = mapToUse.Bonuses.Values.ToList();
             var sortedBonuses = new List<BotBonus>();
-            //mapToUse.SetOpponentExpansionValue();
             while (!allBonuses.IsEmpty())
             {
                 var bestBonus = allBonuses[0];

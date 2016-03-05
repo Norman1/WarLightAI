@@ -54,7 +54,6 @@ namespace WarLight.AI.Wunderwaffe.Tasks
             {
                 if (bonus != bestOpponentBonus && bonus.Amount == bestOpponentBonus.Amount && bonus.NeutralArmies.DefensePower == bestOpponentBonus.NeutralArmies.DefensePower)
                 {
-                    AILog.Log("To many options for snipe");
                     return null;
                 }
             }
@@ -76,7 +75,6 @@ namespace WarLight.AI.Wunderwaffe.Tasks
             outvar = BreakTerritoriesTask.CalculateBreakTerritoriesTask(BotState, possibleBreakTerritories, maxDeployment, BotTerritory.DeploymentType.Normal, BotTerritory.DeploymentType.Normal);
             if (outvar != null)
             {
-                AILog.Log("snipe opponent");
                 return outvar;
             }
             // Step 2: Try to hit a neutral territory there
@@ -99,7 +97,6 @@ namespace WarLight.AI.Wunderwaffe.Tasks
                 var attackTerritoryMoves = CalculateAttackNeutralMoves(attackableNeutral, maxDeployment);
                 if (attackTerritoryMoves != null)
                 {
-                    AILog.Log("snipe neutral");
                     return attackTerritoryMoves;
                 }
             }
@@ -122,8 +119,6 @@ namespace WarLight.AI.Wunderwaffe.Tasks
         {
             Moves outvar = null;
             var neededAttackArmies = neutralTerritory.getNeededBreakArmies(neutralTerritory.Armies.DefensePower);
-            AILog.Log("----------> "+neededAttackArmies);
-            //var neededAttackArmies = SharedUtility.Round(neutralTerritory.Armies.DefensePower / BotState.Settings.OffensiveKillRate);
             var ownedNeighbors = neutralTerritory.GetOwnedNeighbors();
             var bestNeighbor = ownedNeighbors[0];
             foreach (var ownedNeighbor in ownedNeighbors)

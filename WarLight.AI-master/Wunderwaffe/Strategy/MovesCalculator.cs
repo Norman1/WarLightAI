@@ -29,7 +29,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
         {
             CalculatedMoves = new Moves();
             var movesSoFar = new Moves();
-            BotState.GameState.EvaluateGameState();
 
             PlayCardsTask.PlayCards(BotState, movesSoFar);
 
@@ -51,7 +50,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             CalculateExpansionMoves(movesSoFar, 10000000, -51000);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             AILog.Log("Armies used after calculateExpansionMoves: " + movesSoFar.GetTotalDeployment());
-            // int movesWithExpansion = movesSoFar.attackTransferMoves.size();
             BotState.TerritoryValueCalculator.CalculateTerritoryValues(BotState.VisibleMap, BotState.WorkingMap);
             CalculateNoPlanBreakDefendMoves(movesSoFar, false, false, true, BotTerritory.DeploymentType.Normal, BotTerritory.DeploymentType.Normal);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
@@ -89,7 +87,7 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             MovesCommitter.CommittMoves(BotState, supportTransferMoves);
             movesSoFar.MergeMoves(supportTransferMoves);
-            // XX
+
             CalculateNoPlanCleanupMoves(movesSoFar);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             CalculateMoveIdleArmiesMoves(movesSoFar);
@@ -98,7 +96,7 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             CalculateNoPlanTryoutAttackMoves(movesSoFar);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
-            // end xx
+
             AILog.Log("Armies used after all moves done: " + movesSoFar.GetTotalDeployment());
             BotState.MapUpdater.UpdateMap(BotState.WorkingMap);
             DistanceCalculator.CalculateDistanceToBorder(BotState, BotState.VisibleMap, BotState.WorkingMap);
@@ -115,7 +113,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             movesSoFar.MergeMoves(transferMoves);
             CalculateDelayMoves(movesSoFar);
             MovesCleaner.CleanupMoves(BotState, movesSoFar);
-            // movesSoFar = MovesScheduler.scheduleMoves(movesSoFar);
             movesSoFar = BotState.MovesScheduler2.ScheduleMoves(movesSoFar);
             CalculatedMoves = movesSoFar;
         }
@@ -328,7 +325,9 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                         break;
                     }
                     else
+                    {
                         throw new Exception("Unexpected plan");
+                    }
                 }
             }
         }
@@ -345,7 +344,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             {
                 MovesCommitter.CommittMoves(BotState, snipeBonusMoves);
                 moves.MergeMoves(snipeBonusMoves);
-                AILog.Log("Sniped " + bestSnipableBonus.Details.Name);
             }
         }
 
@@ -423,14 +421,12 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                     }
                     Moves oneStepMoves = null;
                     if (!opponentBorderPresent)
-                        // TODO probably bug when acceptStackOnly = true (armiesforExpansion = 0 and totalDeployment = 0), infinite loop.
                         oneStepMoves = BotState.TakeTerritoriesTaskCalculator.CalculateOneStepExpandBonusTask(armiesForExpansion, bonusToExpand, true, BotState.WorkingMap, BotTerritory.DeploymentType.Normal);
                     else
                         oneStepMoves = BotState.TakeTerritoriesTaskCalculator.CalculateOneStepExpandBonusTask(armiesForExpansion, bonusToExpand, false, BotState.WorkingMap, BotTerritory.DeploymentType.Normal);
 
                     if (oneStepMoves != null)
                     {
-                       // AILog.Log(armiesForExpansion+ "    "+oneStepMoves.GetTotalDeployment() );
                         firstStep = false;
                         armiesForExpansion -= oneStepMoves.GetTotalDeployment();
                         MovesCommitter.CommittMoves(BotState, oneStepMoves);

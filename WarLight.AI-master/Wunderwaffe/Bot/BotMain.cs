@@ -18,12 +18,10 @@ namespace WarLight.AI.Wunderwaffe.Bot
         // Gets called multiple times during the game...
         public BotMain()
         {
-            AILog.Log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             this.FogRemover = new FogRemover(this);
             this.HistoryTracker = new HistoryTracker(this);
             this.MovesScheduler2 = new MovesScheduler(this);
             this.MovesCalculator = new MovesCalculator(this);
-            this.GameState = new GameStateEvaluator(this);
             this.DeleteBadMovesTask = new DeleteBadMovesTask(this);
             this.TerritoryValueCalculator = new TerritoryValueCalculator(this);
             this.ExpansionMapUpdater = new ExpansionMapUpdater(this);
@@ -82,7 +80,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
         public List<CardInstance> Cards;
         public int CardsMustPlay;
 
-        public GameStateEvaluator GameState;
         public DeleteBadMovesTask DeleteBadMovesTask;
         public TerritoryValueCalculator TerritoryValueCalculator;
         public ExpansionMapUpdater ExpansionMapUpdater;
@@ -161,7 +158,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
         public List<GameOrder> GetOrders()
         {
             Debug.Debug.PrintDebugOutputBeginTurn(this);
-            AILog.Log(this.NumberOfTurns + " ----> " + LastVisibleMap + "  (begin)");
             FogRemover.RemoveFog();
             this.HistoryTracker.ReadOpponentDeployment();
             this.WorkingMap = this.VisibleMap.GetMapCopy();
@@ -182,7 +178,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
             this.MovesCalculator.CalculatedMoves.DumpToLog();
             LastVisibleMap = VisibleMap.GetMapCopy();
-            AILog.Log(this.NumberOfTurns+" ----> "+LastVisibleMap+"  (end)");
             return this.MovesCalculator.CalculatedMoves.Convert();
         }
 
