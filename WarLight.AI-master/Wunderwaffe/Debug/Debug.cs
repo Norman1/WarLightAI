@@ -27,16 +27,7 @@ namespace WarLight.AI.Wunderwaffe.Debug
                 PrintOpponentBonuses(opp.ID, state);
         }
 
-        // printDistances();
-        // System.err.println();
-        // printBonusValues();
-        // System.err.println();
-        // System.err.println("StartingPicksAmount: " + BotState.StartingPicksAmount);
-        // System.err.println("Known opponent spots: ");
-        // for (Territory territory : BotState.VisibleMap.OpponentTerritories) {
-        // System.err.print(territory.ID + ", ");
-        // }
-        // System.err.println();
+
         private static void PrintDistances(BotMain state)
         {
             AILog.Log("Territory distances:");
@@ -48,10 +39,10 @@ namespace WarLight.AI.Wunderwaffe.Debug
             }
         }
 
-        private static void PrintAllTerritories(BotMain state)
+        public static void PrintAllTerritories(BotMain state, BotMap map)
         {
             AILog.Log("Territories:");
-            foreach (var territory in state.VisibleMap.Territories.Values)
+            foreach (var territory in map.Territories.Values)
             {
                 var id = territory.ID;
                 var player = territory.OwnerPlayerID;

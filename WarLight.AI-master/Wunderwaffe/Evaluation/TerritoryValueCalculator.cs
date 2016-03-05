@@ -319,7 +319,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
                     var opponentIsExpanding = false;
                     foreach (var opponentTerritory in vmBonus.GetVisibleOpponentTerritories())
                     {
-                        var lwmTerritory = BotState.LastVisibleMap.Territories[opponentTerritory.ID];
+                        var lwmTerritory = BotMain.LastVisibleMap.Territories[opponentTerritory.ID];
                         if (lwmTerritory.IsVisible&& lwmTerritory.OwnerPlayerID == TerritoryStanding.NeutralPlayerID)
                             opponentIsExpanding = true;
                     }

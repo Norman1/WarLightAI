@@ -34,7 +34,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             {
                 foreach (var vmTerritory_1 in BotState.VisibleMap.OpponentTerritories(opponentID))
                 {
-                    var lvmTerritory = BotState.LastVisibleMap.Territories[vmTerritory_1.ID];
+                    var lvmTerritory = BotMain.LastVisibleMap.Territories[vmTerritory_1.ID];
                     var guessedOpponentDeployment = 0;
                     if (lvmTerritory.IsVisible && lvmTerritory.OwnerPlayerID == opponentID)
                     {

@@ -31,21 +31,6 @@ namespace WarLight.AI.Wunderwaffe.Bot
             this.Bonuses = bonuses.ToDictionary(o => o.ID, o => o);
         }
 
-        //private Dictionary<PlayerIDType, PlayerExpansionValueHeuristic> _opponentExpansionValue = new Dictionary<PlayerIDType, PlayerExpansionValueHeuristic>();
-
-        //public void SetOpponentExpansionValue(PlayerIDType opponentID)
-        //{
-        //    _opponentExpansionValue[opponentID] = new PlayerExpansionValueHeuristic(BotState, this, opponentID);
-        //}
-
-        //public PlayerExpansionValueHeuristic OpponentExpansionValue(PlayerIDType opponentID)
-        //{
-        //    if (_opponentExpansionValue.ContainsKey(opponentID) == false)
-        //        SetOpponentExpansionValue(opponentID);
-
-        //    return _opponentExpansionValue[opponentID];
-        //}
-
         /// <returns>: a new Map object exactly the same as this one</returns>
         public BotMap GetMapCopy()
         {
@@ -102,7 +87,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
 
         public static BotMap FromStanding(BotMain state, GameStanding stand)
         {
-            var map = state.FullMap.GetMapCopy();
+            var map = state.VisibleMap.GetMapCopy();
             foreach (var terr in stand.Territories.Values)
             {
                 var territory = map.Territories[terr.ID];
