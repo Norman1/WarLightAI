@@ -17,9 +17,9 @@ namespace WarLight.AI
             AILog.Log("Creating game...");
             var gameID = HumanGameAPI.CreateGame(new[] {
                             PlayerInvite.Create("me", (TeamIDType)0, null),
-                          //  PlayerInvite.Create("AI@warlight.net", (TeamIDType)0, null),
+                            PlayerInvite.Create("AI@warlight.net", (TeamIDType)0, null),
                             PlayerInvite.Create(opponent, (TeamIDType)1, null)
-                        }, gameName, 796254, settings =>
+                        }, gameName, null, settings =>
                         {
                             settings["Fog"] = "NoFog"; //turn off fog so we can see what the AI is doing
                             settings["MaxCardsHold"] = 999; //so AI doesn't have to discard
