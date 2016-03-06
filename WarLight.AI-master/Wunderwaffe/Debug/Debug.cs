@@ -40,6 +40,18 @@ namespace WarLight.AI.Wunderwaffe.Debug
         }
 
 
+        public static void printExpandBonusValues(BotMap map, BotMain BotState)
+        {
+            AILog.Log("Bonus expansion values:");
+            foreach (BotBonus bonus in map.Bonuses.Values)
+            {
+                if(bonus.GetOwnedTerritoriesAndNeighbors().Count > 0 && !bonus.IsOwnedByMyself())
+                {
+                    AILog.Log(bonus.Details.Name + ": " + bonus.GetExpansionValue());
+                }
+            }
+        }
+
         public static void PrintTerritoryValues(BotMap map, BotMain BotState)
         {
             AILog.Log("Territory attack values:");
@@ -59,6 +71,18 @@ namespace WarLight.AI.Wunderwaffe.Debug
                     AILog.Log(territory.Details.Name + ": " + territory.ExpansionTerritoryValue);
                 }
             }
+
+            AILog.Log("Territory defend values:");
+            foreach (BotTerritory territory in map.Territories.Values)
+            {
+                if (territory.OwnerPlayerID == BotState.Me.ID && territory.GetOpponentNeighbors().Count > 0)
+                {
+                    AILog.Log(territory.Details.Name + ": " + territory.DefenceTerritoryValue);
+                }
+            }
+
+
+
 
 
         }

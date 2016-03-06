@@ -1,4 +1,4 @@
-﻿ /*
+﻿/*
 * This code was auto-converted from a java project.
 */
 
@@ -49,18 +49,18 @@ namespace WarLight.AI.Wunderwaffe.Bot
             this.ID = id;
         }
 
-        public BotMain BotState {  get { return Parent.BotState;  } }
+        public BotMain BotState { get { return Parent.BotState; } }
 
         public int GetExpansionValue()
         {
             // TODO hack
-            if(ExpansionValue == 0)
+            if (ExpansionValue == 0)
             {
                 SetMyExpansionValueHeuristic();
             }
-            return (int) ExpansionValue;
+            return (int)ExpansionValue;
         }
-        
+
 
         public void SetMyExpansionValueHeuristic()
         {
@@ -133,7 +133,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
             if (this.Territories.Any(pred))
                 return 0;
             var terrs = this.Territories.Select(o => o.ID).ToHashSet(true);
-            
+
             int distance = 1;
 
             while (true)
@@ -343,9 +343,9 @@ namespace WarLight.AI.Wunderwaffe.Bot
             return this.GetOwnedTerritories().Where(owned => owned.Neighbors.Any(z => BotState.IsOpponent(z.OwnerPlayerID))).ToList();
         }
 
-        public List<BotTerritory> GetOwnedTerritoriesBorderingNeighborsOwnedByOpponentOrDistribution()
+        public List<BotTerritory> GetOwnedTerritoriesBorderingOpponent()
         {
-            return this.GetOwnedTerritories().Where(owned => owned.Neighbors.Any(z => z.OwnerPlayerID == TerritoryStanding.AvailableForDistribution || BotState.IsOpponent(z.OwnerPlayerID))).ToList();
+            return this.GetOwnedTerritories().Where(owned => owned.Neighbors.Any(z => BotState.IsOpponent(z.OwnerPlayerID))).ToList();
         }
 
 

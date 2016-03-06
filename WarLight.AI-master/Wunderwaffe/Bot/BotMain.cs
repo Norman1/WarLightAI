@@ -178,6 +178,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
             this.MovesCalculator.CalculateMoves();
             Debug.Debug.PrintDebugOutput(this);
 
+            Debug.Debug.printExpandBonusValues(VisibleMap, this);
             Debug.Debug.PrintTerritoryValues(VisibleMap, this);
             //this.MovesCalculator.CalculatedMoves.DumpToLog();
             LastVisibleMap = VisibleMap.GetMapCopy();

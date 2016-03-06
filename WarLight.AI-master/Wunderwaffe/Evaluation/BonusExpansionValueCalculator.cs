@@ -195,7 +195,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
         {
             if (BotState.NumberOfTurns != -1)
             {
-                return 1;
+                return 0;
             }
             List<BotBonus> betterSmallerBonuses = new List<BotBonus>();
             List<BotBonus> betterLargerBonuses = new List<BotBonus>();
@@ -290,7 +290,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             double territoryFactor = GetTerritoryFactor(allTerritories);
 
 
-            int immediatelyCounteredTerritories = bonus.GetOwnedTerritoriesBorderingNeighborsOwnedByOpponentOrDistribution().Count;
+            int immediatelyCounteredTerritories = bonus.GetOwnedTerritoriesBorderingOpponent().Count;
             double immediatelyCounteredTerritoriesFactor = GetImmediatelyCounteredTerritoryFactor(immediatelyCounteredTerritories);
 
             var allCounteredTerritories = GetCounteredTerritories(bonus, BotState.Me.ID);
@@ -300,8 +300,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             var neighborBonuses = bonus.GetNeighborBonuses();
             foreach (var neighborBonus in neighborBonuses)
             {
-                if (neighborBonus.Territories.Any(o => BotState.IsOpponent(o.OwnerPlayerID)))
-                {
+              if  (neighborBonus.ContainsOpponentPresence()){
                     amountNeighborBonusesWithOpponent++;
                 }
             }
