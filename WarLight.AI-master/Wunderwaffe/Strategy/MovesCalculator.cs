@@ -1,6 +1,6 @@
-﻿ /*
- * This code was auto-converted from a java project.
- */
+﻿/*
+* This code was auto-converted from a java project.
+*/
 
 using System;
 using System.Linq;
@@ -47,7 +47,10 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             CalculateXBonusMoves(movesSoFar, 0, BotTerritory.DeploymentType.Normal);
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             BotState.TerritoryValueCalculator.CalculateTerritoryValues(BotState.VisibleMap, BotState.WorkingMap);
-            CalculateExpansionMoves(movesSoFar, 10000000, -51000);
+
+            BotState.ExpansionTask.CalculateExpansionMoves(movesSoFar);
+
+
             BotState.DeleteBadMovesTask.CalculateDeleteBadMovesTask(movesSoFar);
             AILog.Log("Armies used after calculateExpansionMoves: " + movesSoFar.GetTotalDeployment());
             BotState.TerritoryValueCalculator.CalculateTerritoryValues(BotState.VisibleMap, BotState.WorkingMap);
@@ -233,7 +236,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             var flankBonusMoves = FlankBonusTask.CalculateFlankBonusTask(BotState, maxDeployment);
             if (flankBonusMoves != null)
             {
-                AILog.Log("FLANK_Bonus_MOVES");
                 MovesCommitter.CommittMoves(BotState, flankBonusMoves);
                 moves.MergeMoves(flankBonusMoves);
             }
@@ -279,7 +281,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                         var breakBonusMoves = BreakTerritoriesTask.CalculateBreakTerritoriesTask(BotState, visibleTerritories, stillAvailableDeployment, lowerBoundConservative, upperBoundConservative);
                         if (breakBonusMoves != null)
                         {
-                            AILog.Log("BREAK moves calculated for Bonus " + bonus.Details.Name);
                             MovesCommitter.CommittMoves(BotState, breakBonusMoves);
                             moves.MergeMoves(breakBonusMoves);
                             solutionFound = true;
@@ -291,9 +292,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                         var defendBonusMoves = DefendBonusTask.CalculateDefendBonusTask(BotState, bonus, stillAvailableDeployment, false, (BotTerritory.DeploymentType)Math.Max(1, (int)lowerBoundConservative), (BotTerritory.DeploymentType)Math.Max(1, (int)upperBoundConservative));
                         if (defendBonusMoves != null)
                         {
-                            if (defendBonusMoves.Orders.Count > 0)
-                                AILog.Log("DEFEND moves calculated for Bonus " + bonus.Details.Name);
-
                             MovesCommitter.CommittMoves(BotState, defendBonusMoves);
                             moves.MergeMoves(defendBonusMoves);
                             solutionFound = true;
@@ -305,7 +303,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                         var takeOverMoves = TakeBonusOverTask.CalculateTakeBonusOverTask(BotState, stillAvailableDeployment, bonus, lowerBoundConservative);
                         if (takeOverMoves != null)
                         {
-                            AILog.Log("TAKE_OVER moves calculated for Bonus " + bonus.Details.Name);
                             MovesCommitter.CommittMoves(BotState, takeOverMoves);
                             moves.MergeMoves(takeOverMoves);
                             solutionFound = true;
@@ -318,10 +315,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
                         MovesCommitter.CommittMoves(BotState, preventTakeOverMoves);
                         moves.MergeMoves(preventTakeOverMoves);
                         solutionFound = true;
-                        if (preventTakeOverMoves.Orders.Count > 0)
-                        {
-                            AILog.Log("PREVENT_TAKE_OVER moves calculated for Bonus " + bonus.Details.Name);
-                        }
                         break;
                     }
                     else
@@ -347,126 +340,5 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             }
         }
 
-        private void CalculateExpansionMoves(Moves moves, int maxValue, int minValue)
-        {
-            var armiesForExpansion = Math.Min(BotState.Settings.MinimumArmyBonus, BotState.MyIncome.Total - moves.GetTotalDeployment());
-            var armiesForTakeOver = BotState.MyIncome.Total - moves.GetTotalDeployment();
-            if (BotState.VisibleMap.GetOpponentBorderingTerritories().Count == 0)
-                armiesForExpansion = BotState.MyIncome.Total - moves.GetTotalDeployment();
-
-            AddValueToImmediateBonuses(armiesForTakeOver);
-            var sortedAccessibleBonuses = BotState.BonusExpansionValueCalculator.SortAccessibleBonuses(BotState.VisibleMap);
-            
-            sortedAccessibleBonuses = sortedAccessibleBonuses.Where(bonus => bonus.GetExpansionValue() >= minValue && bonus.GetExpansionValue() <= maxValue).ToList();
-            var bonusesThatCanBeTaken = GetBonusesThatCanBeTaken(armiesForTakeOver);
-            var takenOverBonuses = new List<BotBonus>();
-            var armiesUsedForTakeOver = 0;
-            foreach (var bonus in sortedAccessibleBonuses)
-            {
-                if (bonusesThatCanBeTaken.Contains(bonus))
-                {
-                    var expansionMoves = BotState.TakeTerritoriesTaskCalculator.CalculateTakeTerritoriesTask(armiesForTakeOver, bonus.GetNotOwnedTerritories(), BotTerritory.DeploymentType.Normal, "MovesCalculator.CalculateExpansionMoves");
-                    MovesCommitter.CommittMoves(BotState, expansionMoves);
-                    moves.MergeMoves(expansionMoves);
-                    armiesForTakeOver -= expansionMoves.GetTotalDeployment();
-                    bonusesThatCanBeTaken = GetBonusesThatCanBeTaken(armiesForTakeOver);
-                    takenOverBonuses.Add(bonus);
-                    armiesUsedForTakeOver += expansionMoves.GetTotalDeployment();
-                }
-                else
-                    break;
-            }
-            var isExpandingAfterTakeOverSmart = true;
-            if (BotState.VisibleMap.GetOpponentBorderingTerritories().Count > 0)
-                isExpandingAfterTakeOverSmart = false;
-            if (BotState.WorkingMap.GetOpponentBorderingTerritories().Count > 0)
-                isExpandingAfterTakeOverSmart = false;
-
-
-            var opponentBorderPresent = BotState.VisibleMap.GetOpponentBorderingTerritories().Count > 0;
-            armiesForExpansion = Math.Max(0, armiesForExpansion - armiesUsedForTakeOver);
-            if (takenOverBonuses.Count == 0 || isExpandingAfterTakeOverSmart)
-            {
-                BotBonus bonusToExpand = null;
-                foreach (var bonus in sortedAccessibleBonuses)
-                {
-                    if (!takenOverBonuses.Contains(bonus))
-                    {
-                        var condition1 = bonus.GetVisibleNeutralTerritories().Count > 0;
-                        var condition2 = bonus.Amount > 0;
-                        var condition3 = !opponentBorderPresent || bonus.ExpansionValueCategory > 0;
-                        if (condition1 && condition2 && condition3)
-                        {
-                            bonusToExpand = bonus;
-                            break;
-                        }
-                    }
-                }
-                if (bonusToExpand == null)
-                    return;
-                var foundMoves = true;
-                var firstStep = true;
-                while (foundMoves)
-                {
-                    BotState.BonusValueCalculator.CalculateBonusValues(BotState.WorkingMap, BotState.VisibleMap);
-                    foundMoves = false;
-                    if (firstStep == false)
-                    {
-                        if (bonusToExpand.ExpansionValueCategory == 0)
-                            return;
-                        if (opponentBorderPresent)
-                            armiesForExpansion = 0;
-                        if (bonusToExpand.GetOpponentNeighbors().Count > 0)
-                            return;
-                    }
-                    Moves oneStepMoves = null;
-                    if (!opponentBorderPresent)
-                        oneStepMoves = BotState.TakeTerritoriesTaskCalculator.CalculateOneStepExpandBonusTask(armiesForExpansion, bonusToExpand, true, BotState.WorkingMap, BotTerritory.DeploymentType.Normal);
-                    else
-                        oneStepMoves = BotState.TakeTerritoriesTaskCalculator.CalculateOneStepExpandBonusTask(armiesForExpansion, bonusToExpand, false, BotState.WorkingMap, BotTerritory.DeploymentType.Normal);
-
-                    if (oneStepMoves != null)
-                    {
-                        firstStep = false;
-                        armiesForExpansion -= oneStepMoves.GetTotalDeployment();
-                        MovesCommitter.CommittMoves(BotState, oneStepMoves);
-                        moves.MergeMoves(oneStepMoves);
-                        foundMoves = true;
-                    }
-                }
-            }
-        }
-
-        private void AddValueToImmediateBonuses(int maxDeployment)
-        {
-            var sortedAccessibleBonuses = BotState.BonusExpansionValueCalculator.SortAccessibleBonuses(BotState.VisibleMap);
-            foreach (BotBonus bonus in sortedAccessibleBonuses)
-            {
-                if ((bonus.AreAllTerritoriesVisible()) && (!bonus.ContainsOpponentPresence()) && (bonus.Amount > 0) && !bonus.IsOwnedByMyself())
-                {
-                    var nonOwnedTerritories = bonus.GetNotOwnedTerritories();
-                    var expansionMoves = BotState.TakeTerritoriesTaskCalculator.CalculateTakeTerritoriesTask(maxDeployment, nonOwnedTerritories, BotTerritory.DeploymentType.Normal, "MovesCalculator.AddValueToImmediateBonuses");
-                    if (expansionMoves != null)
-                        BotState.BonusExpansionValueCalculator.AddExtraValueForFirstTurnBonus(bonus);
-                }
-            }
-        }
-
-        private List<BotBonus> GetBonusesThatCanBeTaken(int maxDeployment)
-        {
-            var outvar = new List<BotBonus>();
-            var sortedAccessibleBonuses = BotState.BonusExpansionValueCalculator.SortAccessibleBonuses(BotState.VisibleMap);
-            foreach (var bonus in sortedAccessibleBonuses)
-            {
-                if (bonus.AreAllTerritoriesVisible() && !bonus.ContainsOpponentPresence() && bonus.Amount > 0)
-                {
-                    var nonOwnedTerritories = bonus.GetNotOwnedTerritories();
-                    var expansionMoves = BotState.TakeTerritoriesTaskCalculator.CalculateTakeTerritoriesTask(maxDeployment, nonOwnedTerritories, BotTerritory.DeploymentType.Normal, "MovesCalculator.GetBonusesThatCanBeTaken");
-                    if (expansionMoves != null)
-                        outvar.Add(bonus);
-                }
-            }
-            return outvar;
-        }
     }
 }

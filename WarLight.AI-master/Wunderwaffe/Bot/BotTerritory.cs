@@ -110,8 +110,17 @@ namespace WarLight.AI.Wunderwaffe.Bot
             List<BotTerritory> outvar = new List<BotTerritory>();
             foreach (var neighbor in this.Neighbors)
             {
-                if (Details.PartOfBonuses.Any(o => neighbor.Details.PartOfBonuses.Contains(o)))
+                if(neighbor.Bonuses.Count == 0 || Bonuses.Count == 0)
+                {
+                    continue;
+                }
+                if(neighbor.Bonuses[0] == Bonuses[0])
+                {
                     outvar.Add(neighbor);
+                }
+                // TODO gives wrong result
+                //if (Details.PartOfBonuses.Any(o => neighbor.Details.PartOfBonuses.Contains(o)))
+                //    outvar.Add(neighbor);
             }
             return outvar;
         }
@@ -171,7 +180,9 @@ namespace WarLight.AI.Wunderwaffe.Bot
         {
             var armies = this.Armies;
             foreach (var pam in this.GetDeployment(type))
+            {
                 armies = armies.Add(new Armies(pam.Armies));
+            }
             return armies;
         }
 
@@ -233,6 +244,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         {
             return this.Neighbors.Where(o => o.OwnerPlayerID != BotState.Me.ID).ToList();
         }
+
 
         public List<BotTerritory> GetOpponentNeighbors()
         {

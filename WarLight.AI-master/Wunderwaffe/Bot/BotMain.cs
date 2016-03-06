@@ -27,6 +27,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
             this.ExpansionMapUpdater = new ExpansionMapUpdater(this);
             this.BreakTerritoryTask = new BreakTerritoryTask(this);
             this.BonusValueCalculator = new BonusValueCalculator(this);
+            this.ExpansionTask = new ExpansionTask(this);
             this.BonusExpansionValueCalculator = new BonusExpansionValueCalculator(this);
             this.DefendTerritoryTask = new DefendTerritoryTask(this);
             this.DefendTerritoriesTask = new DefendTerritoriesTask(this);
@@ -68,6 +69,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
             this.CardsMustPlay = cardsMustPlay;
         }
 
+
         public FogRemover FogRemover;
         public PicksEvaluator PicksEvaluator;
         public OpponentDeploymentGuesser OpponentDeploymentGuesser;
@@ -84,6 +86,7 @@ namespace WarLight.AI.Wunderwaffe.Bot
         public TerritoryValueCalculator TerritoryValueCalculator;
         public ExpansionMapUpdater ExpansionMapUpdater;
         public BreakTerritoryTask BreakTerritoryTask;
+        public ExpansionTask ExpansionTask;
         public BonusValueCalculator BonusValueCalculator;
         public BonusExpansionValueCalculator BonusExpansionValueCalculator;
 
@@ -175,8 +178,8 @@ namespace WarLight.AI.Wunderwaffe.Bot
             this.MovesCalculator.CalculateMoves();
             Debug.Debug.PrintDebugOutput(this);
 
-
-            this.MovesCalculator.CalculatedMoves.DumpToLog();
+            Debug.Debug.PrintTerritoryValues(VisibleMap, this);
+            //this.MovesCalculator.CalculatedMoves.DumpToLog();
             LastVisibleMap = VisibleMap.GetMapCopy();
             return this.MovesCalculator.CalculatedMoves.Convert();
         }

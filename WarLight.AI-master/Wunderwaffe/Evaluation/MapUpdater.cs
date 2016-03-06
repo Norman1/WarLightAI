@@ -53,8 +53,9 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             var toBeKilledArmies = vmTerritory.GetArmiesAfterDeployment(BotTerritory.DeploymentType.Normal);
             var attackingArmies = vmTerritory.GetIncomingArmies();
             if (vmTerritory.getOwnKills(attackingArmies.AttackPower, toBeKilledArmies.DefensePower) >= toBeKilledArmies.DefensePower)
-                //if (Math.Round(attackingArmies.AttackPower * BotState.Settings.OffensiveKillRate) >= toBeKilledArmies.DefensePower)
+            {
                 wmTerritory.OwnerPlayerID = BotState.Me.ID;
+            }
         }
     }
 }

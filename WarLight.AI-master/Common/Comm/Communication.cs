@@ -53,7 +53,7 @@ namespace WarLight.AI
             {
                 ret.TeammatesOrders = new Dictionary<PlayerIDType, TeammateOrders>();
 
-                foreach(var teammatesOrders in ((JArray)gameInfo["teammatesOrders"]))
+                foreach (var teammatesOrders in ((JArray)gameInfo["teammatesOrders"]))
                 {
                     var pid = (PlayerIDType)(int)teammatesOrders["playerID"];
                     var orders = new TeammateOrders();
@@ -152,12 +152,15 @@ namespace WarLight.AI
 
         public static CardInstance ReadCardInstance(JToken jToken)
         {
+            AILog.Log(jToken.ToString());
+
             CardInstance ret;
             if (jToken["armies"] != null)
             {
                 ret = new ReinforcementCardInstance();
                 ret.As<ReinforcementCardInstance>().Armies = (int)jToken["armies"];
             }
+            // ID 4 --> Order prio card
             else
                 ret = new CardInstance();
 
@@ -193,13 +196,13 @@ namespace WarLight.AI
             if (jToken == null || (jToken.Type == JTokenType.String && (string)jToken == "null"))
                 return null;
 
-            foreach(var terr in (JArray)jToken)
+            foreach (var terr in (JArray)jToken)
             {
                 var terrID = (TerritoryIDType)(int)terr["terrID"];
                 var playerID = ToPlayerID((string)terr["ownedBy"]);
                 var armies = ToArmies((string)terr["armies"]);
                 ret.Territories.Add(terrID, new TerritoryStanding(terrID, playerID, armies));
-                
+
             }
 
             return ret;
@@ -228,7 +231,7 @@ namespace WarLight.AI
         public static GameOrder[] ReadOrders(JToken jToken)
         {
             var ret = new List<GameOrder>();
-            foreach(var jOrder in (JArray)jToken)
+            foreach (var jOrder in (JArray)jToken)
                 ret.Add(ReadOrder(jOrder));
 
             return ret.ToArray();
@@ -302,7 +305,7 @@ namespace WarLight.AI
                     var ret = new GameOrderReceiveCard();
                     ret.PlayerID = (PlayerIDType)(int)jOrder["playerID"];
                     ret.InstancesCreated = new List<CardInstance>();
-                    foreach(var card in (JArray)jOrder["cardsMadeWhole"])
+                    foreach (var card in (JArray)jOrder["cardsMadeWhole"])
                     {
                         var inst = new CardInstance();
                         inst.ID = (CardInstanceIDType)Guid.Parse((string)card["cardInstanceID"]);

@@ -68,7 +68,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             {
                 if (territory.GetIdleArmies().IsEmpty == false && territory.GetOpponentNeighbors().Count == 0)
                 {
-                    // List<Territory> ownedNeighbors = territory.GetOwnedNeighbors();
                     var ownedNeighbors = GetOwnedNeighborsAfterExpansion(state, territory);
                     if (ownedNeighbors.Count > 0)
                     {
@@ -99,6 +98,8 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             }
             return outvar;
         }
+
+
 
         private static BotTerritory GetCloserTerritory(BotTerritory territory1, BotTerritory territory2)
         {
@@ -136,11 +137,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             return territory2;
         }
 
-        //		if (territory1.ID > territory2.ID) {
-        //			return territory1;
-        //		} else {
-        //			return territory2;
-        //		}
         public static int GetAdjustedDistance(BotTerritory territory)
         {
             var distanceToUnimportantSpot = territory.DistanceToUnimportantSpot + 5;

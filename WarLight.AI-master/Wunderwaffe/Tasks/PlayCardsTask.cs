@@ -25,7 +25,9 @@ namespace WarLight.AI.Wunderwaffe.Tasks
             foreach (var card in state.Cards)
             {
                 if (cardsPlayedByTeammate.Contains(card.ID))
-                    continue; //Teammate played it
+                {
+                    continue;
+                }
 
                 if (card is ReinforcementCardInstance)
                 {

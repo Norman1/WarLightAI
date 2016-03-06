@@ -111,7 +111,6 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             var toBeTakenTerritoryArmies = toBeTakenTerritory.GetArmiesAfterDeploymentAndIncomingAttacks
                 (conservativeLevel);
             var neededArmies = toBeTakenTerritory.getNeededBreakArmies(toBeTakenTerritory.Armies.DefensePower);
-            //var neededArmies = (int)Math.Round(toBeTakenTerritoryArmies.DefensePower / BotState.Settings.OffensiveKillRate);
             if (idleArmies.AttackPower >= neededArmies)
                 return 0;
             else

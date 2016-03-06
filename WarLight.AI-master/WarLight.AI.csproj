@@ -178,6 +178,7 @@
     <Compile Include="Wunderwaffe\Tasks\DefendBonusTask.cs" />
     <Compile Include="Wunderwaffe\Tasks\DelayTask.cs" />
     <Compile Include="Wunderwaffe\Tasks\DeleteBadMovesTask.cs" />
+    <Compile Include="Wunderwaffe\Tasks\ExpansionTask.cs" />
     <Compile Include="Wunderwaffe\Tasks\FlankBonusTask.cs" />
     <Compile Include="Wunderwaffe\Tasks\JoinInAttacksTask.cs" />
     <Compile Include="Wunderwaffe\Tasks\MoveIdleArmiesTask.cs" />

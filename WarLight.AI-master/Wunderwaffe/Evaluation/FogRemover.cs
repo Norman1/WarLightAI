@@ -27,13 +27,10 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             else if (BotState.NumberOfTurns == 0)
             {
                 lvMap = BotMap.FromStanding(BotState, BotState.DistributionStanding);
-                Debug.
-            Debug.PrintAllTerritories(BotState, lvMap);
             }
             else
             {
                 lvMap = BotMain.LastVisibleMap;
-                Debug.Debug.PrintAllTerritories(BotState, lvMap);
             }
 
             BotMap visibleMap = BotState.VisibleMap;

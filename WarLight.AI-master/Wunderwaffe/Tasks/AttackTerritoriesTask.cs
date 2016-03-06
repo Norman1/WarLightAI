@@ -22,8 +22,7 @@ namespace WarLight.AI.Wunderwaffe.Tasks
         /// <param name="opponentTerritory"></param>
         /// <param name="maxDeployment"></param>
         /// <returns></returns>
-        public static Moves CalculateAttackTerritoryTask(BotMain state, BotTerritory opponentTerritory, int maxDeployment
-        )
+        public static Moves CalculateAttackTerritoryTask(BotMain state, BotTerritory opponentTerritory, int maxDeployment)
         {
             var outvar = new Moves();
             var ownedNeighbors = opponentTerritory.GetOwnedNeighbors();
