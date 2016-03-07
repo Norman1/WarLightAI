@@ -137,11 +137,12 @@ namespace WarLight.AI.Wunderwaffe.Strategy
             return territory2;
         }
 
+        // TODO distances are outdated
         public static int GetAdjustedDistance(BotTerritory territory)
         {
-            var distanceToUnimportantSpot = territory.DistanceToUnimportantSpot + 5;
-            var distanceToImportantExpansionSpot = territory.DistanceToImportantSpot + 1;
-            var distanceToHighlyImportantExpansionSpot = territory.DistanceToHighlyImportantSpot;
+            var distanceToUnimportantSpot = territory.DistanceToUnimportantSpot + 6;
+            var distanceToImportantExpansionSpot = territory.DistanceToImportantSpot + 3;
+            var distanceToHighlyImportantExpansionSpot = territory.DistanceToHighlyImportantSpot + 3;
             var distanceToOpponentSpot = territory.DistanceToOpponentBorder;
             var distanceToImportantOpponentSpot = territory.DistanceToImportantOpponentBorder;
             var minDistance = Math.Min(Math.Min(Math.Min(distanceToUnimportantSpot, distanceToImportantExpansionSpot), Math.Min(distanceToHighlyImportantExpansionSpot, distanceToOpponentSpot)), distanceToImportantOpponentSpot);

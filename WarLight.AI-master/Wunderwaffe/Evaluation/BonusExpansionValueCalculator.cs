@@ -185,7 +185,7 @@ namespace WarLight.AI.Wunderwaffe.Evaluation
             double factor = 0.0;
             if (amountNeighborBonuses > 0)
             {
-                factor = 0.075;
+                factor = 0.1;
             }
             return factor;
         }
